@@ -15,7 +15,8 @@ public class HUDManager : MonoBehaviour
     public TMP_Text teamText;
 
     //UI Buttons
-    public Button damageButton;
+    public Button damageSmallButton;
+    public Button damageLargeButton;
     public Button shieldButton;
     public Button changeTeamButton;
     public Button shootButton;
@@ -49,9 +50,13 @@ public class HUDManager : MonoBehaviour
         currentShieldHealth = 0;
         UpdateHUD();
         UpdateTimer();
-        if (damageButton != null)
+        if (damageSmallButton != null)
         {
-            damageButton.onClick.AddListener(() => TakeDamage(5));
+            damageSmallButton.onClick.AddListener(() => TakeDamage(5));
+        }
+        if (damageLargeButton != null)
+        {
+            damageLargeButton.onClick.AddListener(() => TakeDamage(10));
         }
         if (changeTeamButton != null)
         {
@@ -118,8 +123,10 @@ public class HUDManager : MonoBehaviour
         UpdateHUD();
     }
 
-    public void Shield() {
-        if (currentShield > 0) {
+    public void Shield()
+    {
+        if (currentShield > 0)
+        {
             currentShieldHealth = maxShieldHealth;
             currentShield--;
             UpdateHUD();
