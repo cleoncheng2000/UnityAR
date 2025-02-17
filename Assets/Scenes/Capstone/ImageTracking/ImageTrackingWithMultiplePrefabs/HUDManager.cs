@@ -14,6 +14,10 @@ public class HUDManager : MonoBehaviour
     public TMP_Text timerText;
     public TMP_Text teamText;
 
+    //Border Images
+    public Q_Vignette_Single shieldImage;
+    public Q_Vignette_Single damageImage;
+
     //UI Buttons
     public Button damageSmallButton;
     public Button damageLargeButton;
@@ -22,6 +26,7 @@ public class HUDManager : MonoBehaviour
     public Button shootButton;
     public Button bombButton;
     public Button reloadButton;
+    public Button selfShieldButton;
 
     //Max values of stats
     public int maxHealth = 100;
@@ -48,6 +53,7 @@ public class HUDManager : MonoBehaviour
         currentAmmo = maxAmmo;
         currentBomb = maxBomb;
         currentShieldHealth = 0;
+        shieldImage.mainScale = 0;
         UpdateHUD();
         UpdateTimer();
         if (damageSmallButton != null)
@@ -77,6 +83,10 @@ public class HUDManager : MonoBehaviour
         if (shieldButton != null)
         {
             shieldButton.onClick.AddListener(Shield);
+        }
+        if (selfShieldButton != null)
+        {
+            selfShieldButton.onClick.AddListener(SelfShield);
         }
     }
 
@@ -109,6 +119,7 @@ public class HUDManager : MonoBehaviour
             {
                 damage -= currentShieldHealth;
                 currentShieldHealth = 0;
+                shieldImage.mainScale = 0;
             }
         }
         if (damage > 0)
@@ -119,18 +130,22 @@ public class HUDManager : MonoBehaviour
         {
             currentHealth = 0;
         }
-
         UpdateHUD();
     }
 
-    public void Shield()
+    public void Shield() //toggles opponent shield
     {
-        if (currentShield > 0)
+    }
+
+    public void SelfShield() //toggles self shield
+    {
+        if (currentShieldHealth == 0 && currentShield > 0)
         {
+            shieldImage.mainScale = 1f;
             currentShieldHealth = maxShieldHealth;
             currentShield--;
-            UpdateHUD();
         }
+        UpdateHUD();
     }
 
     private void ChangeTeam()

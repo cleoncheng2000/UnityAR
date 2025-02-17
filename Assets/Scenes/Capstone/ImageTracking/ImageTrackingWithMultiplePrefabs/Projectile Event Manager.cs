@@ -1,0 +1,298 @@
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+using UnityEngine.UI;
+using System.Collections;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Unity.XR.CoreUtils;
+
+public class ProjectileEventManager : MonoBehaviour
+{
+    public ARTrackedImageManager imageManager;
+
+    public ARAnchorManager anchorManager;
+    public GameObject targetPrefab;
+    public GameObject bombPrefab;
+    public GameObject bulletPrefab;
+    public GameObject badmintonPrefab;
+    public GameObject golfPrefab;
+    public GameObject boxingPrefab;
+    public GameObject fencingPrefab;
+    public GameObject shieldPrefab;
+    public GameObject damagePrefab;
+    public GameObject snowParticlePrefab;
+    public Transform MainCamera;
+    public Transform bombSpawnPoint; // Assign an empty GameObject in front of the camera as the spawn point
+    public Transform bulletSpawnPoint;
+
+    public Transform badmintonSpawnPoint;
+
+    public Transform golfSpawnPoint;
+
+    public Transform boxingSpawnPoint;
+
+    public Transform fencingSpawnPoint;
+
+
+    private GameObject trackedTarget; // Store the spawned cube reference
+    private GameObject shieldInstance; // Store the spawned shield reference
+    private GameObject selfShieldInstance; // Store the spawned shield reference
+
+    public Button bombButton;
+    public Button bulletButton;
+    public Button badmintonButton;
+    public Button golfButton;
+    public Button boxingButton;
+    public Button fencingButton;
+    public Button shieldButton;
+    public Button selfShieldButton;
+
+    private Dictionary<ARAnchor, GameObject> anchorToSnowParticleMap = new Dictionary<ARAnchor, GameObject>();
+
+    void Start()
+    {
+        bombButton.onClick.AddListener(FireBomb);
+        bulletButton.onClick.AddListener(FireBullet);
+        badmintonButton.onClick.AddListener(FireBadminton);
+        golfButton.onClick.AddListener(FireGolf);
+        boxingButton.onClick.AddListener(FireBoxing);
+        fencingButton.onClick.AddListener(FireFencing);
+        shieldButton.onClick.AddListener(ToggleShield);
+    }
+
+    void OnEnable()
+    {
+        imageManager.trackablesChanged.AddListener(OnImageChanged);
+        anchorManager.trackablesChanged.AddListener(OnTrackablesChanged);
+    }
+
+    void OnDisable()
+    {
+        imageManager.trackablesChanged.RemoveListener(OnImageChanged);
+        anchorManager.trackablesChanged.RemoveListener(OnTrackablesChanged);
+    }
+
+    void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> eventArgs) //update tracked image positions
+    {
+        foreach (var trackedImage in eventArgs.added)
+        {
+            SpawnTarget(trackedImage);
+        }
+
+        foreach (var trackedImage in eventArgs.updated)
+        {
+            UpdateTarget(trackedImage);
+        }
+
+        foreach (var trackedImage in eventArgs.removed)
+        {
+            RemoveTarget();
+        }
+    }
+
+    public void OnTrackablesChanged(ARTrackablesChangedEventArgs<ARAnchor> eventArgs) //update the snow particle position when the anchor is updated
+    {
+        foreach (var anchor in eventArgs.updated)
+        {
+            if (anchorToSnowParticleMap.TryGetValue(anchor, out GameObject snowParticleInstance))
+            {
+                snowParticleInstance.transform.position = anchor.transform.position;
+            }
+        }
+    }
+
+    void SpawnTarget(ARTrackedImage trackedImage)
+    {
+        if (trackedTarget == null)
+        {
+            trackedTarget = Instantiate(targetPrefab, trackedImage.transform.position, Quaternion.identity);
+        }
+        else
+        {
+            trackedTarget.transform.position = trackedImage.transform.position;
+        }
+    }
+
+    void UpdateTarget(ARTrackedImage trackedImage)
+    {
+        if (trackedTarget != null)
+        {
+            if (trackedImage.trackingState == TrackingState.Tracking)
+            {
+                // Enable the cube and update its position/rotation
+                trackedTarget.SetActive(true);
+                trackedTarget.transform.position = trackedImage.transform.position;
+                trackedTarget.transform.rotation = trackedImage.transform.rotation;
+            }
+            else
+            {
+                // Disable the cube when tracking is lost
+                trackedTarget.SetActive(false);
+            }
+        }
+    }
+
+    void RemoveTarget()
+    {
+        if (trackedTarget != null)
+        {
+            Destroy(trackedTarget); // Destroy the instantiated cube
+            trackedTarget = null; // Remove the reference
+        }
+    }
+
+    public void FireBomb()
+    {
+        GameObject bomb = Instantiate(bombPrefab, bombSpawnPoint.position, MainCamera.rotation);
+
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            bomb.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true);
+            CreateSnowParticleEffect(trackedTarget.transform.position);
+
+        }
+        else
+        {
+            // Calculate a position 3 meters in front of the camera
+            Vector3 forwardPosition = MainCamera.position + MainCamera.forward * 3f;
+            GameObject tempTarget = new GameObject("TempTarget");
+            tempTarget.transform.position = forwardPosition;
+            bomb.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false);
+            CreateSnowParticleEffect(tempTarget.transform.position);
+            Destroy(tempTarget, 3f); // Clean up the temporary target after 3 seconds
+        }
+    }
+
+    public void FireBullet()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
+
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true);
+        }
+        else
+        {
+            FireAtTemporaryTarget(bullet, bulletSpawnPoint, false);
+        }
+    }
+
+
+    public void FireBadminton()
+    {
+        GameObject shuttle = Instantiate(badmintonPrefab, badmintonSpawnPoint.position, MainCamera.rotation);
+
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            shuttle.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true);
+        }
+        else
+        {
+            FireAtTemporaryTarget(shuttle, badmintonSpawnPoint, true);
+        }
+    }
+
+    public void FireBoxing()
+    {
+        GameObject glove = Instantiate(boxingPrefab, boxingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
+
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            glove.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true);
+        }
+        else
+        {
+            FireAtTemporaryTarget(glove, boxingSpawnPoint, false);
+        }
+    }
+
+    public void FireGolf()
+    {
+        GameObject missile = Instantiate(golfPrefab, golfSpawnPoint.position, MainCamera.rotation);
+
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            missile.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true);
+        }
+        else
+        {
+            FireAtTemporaryTarget(missile, golfSpawnPoint, true);
+        }
+    }
+    public void FireFencing()
+    {
+        GameObject bullet = Instantiate(fencingPrefab, fencingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
+
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true);
+        }
+        else
+        {
+            FireAtTemporaryTarget(bullet, fencingSpawnPoint, false);
+        }
+    }
+
+    public void ToggleShield()
+    {
+        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        {
+            if (shieldInstance == null)
+            {
+                // Spawn the shield
+                shieldInstance = Instantiate(shieldPrefab, trackedTarget.transform.position, trackedTarget.transform.rotation);
+                shieldInstance.transform.parent = trackedTarget.transform;
+            }
+            else
+            {
+                // Despawn the shield
+                Destroy(shieldInstance);
+                shieldInstance = null;
+            }
+        }
+    }
+
+    private bool IsTargetInView(Transform target)
+    {
+        Vector3 viewportPoint = MainCamera.GetComponent<Camera>().WorldToViewportPoint(target.position);
+        return viewportPoint.x >= 0 && viewportPoint.x <= 1 && viewportPoint.y >= 0 && viewportPoint.y <= 1 && viewportPoint.z > 0;
+    }
+
+    private async void CreateSnowParticleEffect(Vector3 position)
+    {
+        if (anchorManager != null)
+        {
+            var anchor = await anchorManager.TryAddAnchorAsync(new Pose(position, Quaternion.identity));
+            if (anchor.status.IsSuccess())
+            {
+                GameObject snowParticleInstance = Instantiate(snowParticlePrefab, position, Quaternion.identity);
+                snowParticleInstance.transform.SetParent(anchor.value.transform);
+            }
+            else
+            {
+                Debug.LogError("Failed to create anchor for snow particle effect.");
+            }
+        }
+    }
+
+    private void FireAtTemporaryTarget(GameObject missile, Transform spawnPoint, bool isArcProjectile)
+    {
+        // Calculate a position 3 meters in front of the camera
+        Vector3 forwardPosition = MainCamera.position + MainCamera.forward * 3f;
+        GameObject tempTarget = new GameObject("TempTarget");
+        tempTarget.transform.position = forwardPosition;
+
+        if (isArcProjectile)
+        {
+            missile.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false);
+        }
+        else
+        {
+            missile.GetComponent<StraightProjectiles>().FireStraightProjectile(tempTarget.transform, false);
+        }
+
+        Destroy(tempTarget, 3f); // Clean up the temporary target after 3 seconds
+    }
+
+}
