@@ -8,7 +8,7 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 2
+  defaultScreenOrientation: 3
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
@@ -146,6 +146,11 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 4800000, guid: c9f956787b1d945e7b36e0516201fc76, type: 3}
+  - {fileID: 4800000, guid: 0945859e5a1034c2cb6dce53cb4fb899, type: 3}
+  - {fileID: -6122771651556369562, guid: e2f869774b12e400996eb546603602e3, type: 2}
+  - {fileID: -1873822528936164982, guid: 2d2dec64879445247bb34603b4469c6c, type: 2}
+  - {fileID: 11400000, guid: 302e9f36808117f4184b07b05ca5bb47, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -178,8 +183,8 @@ PlayerSettings:
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 26
-  AndroidTargetSdkVersion: 0
+  AndroidMinSdkVersion: 29
+  AndroidTargetSdkVersion: 33
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
@@ -262,10 +267,10 @@ PlayerSettings:
   templateDefaultScene: Assets/Scenes/SampleScene.unity
   useCustomMainManifest: 0
   useCustomLauncherManifest: 0
-  useCustomMainGradleTemplate: 0
+  useCustomMainGradleTemplate: 1
   useCustomLauncherGradleManifest: 0
   useCustomBaseGradleTemplate: 0
-  useCustomGradlePropertiesTemplate: 0
+  useCustomGradlePropertiesTemplate: 1
   useCustomGradleSettingsTemplate: 0
   useCustomProguardFile: 0
   AndroidTargetArchitectures: 2
@@ -276,7 +281,7 @@ PlayerSettings:
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0
   AndroidBuildApkPerCpuArchitecture: 0
-  AndroidTVCompatibility: 1
+  AndroidTVCompatibility: 0
   AndroidIsGame: 1
   AndroidEnableTango: 0
   androidEnableBanner: 1

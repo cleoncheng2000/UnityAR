@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.google.xr.cardboard": "https://github.com/googlevr/cardboard-xr-plugin.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.cloud.gltfast": "6.10.2",
     "com.unity.device-simulator.devices": "1.0.0",
@@ -50,6 +51,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "scopedRegistries": []
+  }
 }

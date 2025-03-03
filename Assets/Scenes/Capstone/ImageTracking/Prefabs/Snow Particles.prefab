@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3133777818686079320}
   - component: {fileID: 8787838368060591706}
   - component: {fileID: 5702412598129213494}
+  - component: {fileID: 2393735580895932051}
   m_Layer: 0
   m_Name: Snow Particles
   m_TagString: Untagged
@@ -4842,3 +4843,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &2393735580895932051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592302500721193784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86e1e2cefca57a4cb011b933b0590c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  target: {fileID: 1802353116920051986, guid: 40bb26f520f20974c965e86303e69cad, type: 3}
+  range: 1
+  damageCooldown: 3

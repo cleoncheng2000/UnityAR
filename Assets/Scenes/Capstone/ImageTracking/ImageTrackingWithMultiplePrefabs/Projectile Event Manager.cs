@@ -9,9 +9,11 @@ using Unity.XR.CoreUtils;
 
 public class ProjectileEventManager : MonoBehaviour
 {
+    // Managers for AR subsystems
     public ARTrackedImageManager imageManager;
-
     public ARAnchorManager anchorManager;
+
+    // Prefabs for different projectiles
     public GameObject targetPrefab;
     public GameObject bombPrefab;
     public GameObject bulletPrefab;
@@ -20,10 +22,11 @@ public class ProjectileEventManager : MonoBehaviour
     public GameObject boxingPrefab;
     public GameObject fencingPrefab;
     public GameObject shieldPrefab;
-    public GameObject damagePrefab;
     public GameObject snowParticlePrefab;
     public Transform MainCamera;
-    public Transform bombSpawnPoint; // Assign an empty GameObject in front of the camera as the spawn point
+
+    // Spawn points for different projectiles
+    public Transform bombSpawnPoint;
     public Transform bulletSpawnPoint;
 
     public Transform badmintonSpawnPoint;
@@ -37,8 +40,8 @@ public class ProjectileEventManager : MonoBehaviour
 
     private GameObject trackedTarget; // Store the spawned cube reference
     private GameObject shieldInstance; // Store the spawned shield reference
-    private GameObject selfShieldInstance; // Store the spawned shield reference
 
+    // UI buttons for different projectiles
     public Button bombButton;
     public Button bulletButton;
     public Button badmintonButton;
@@ -48,6 +51,7 @@ public class ProjectileEventManager : MonoBehaviour
     public Button shieldButton;
     public Button selfShieldButton;
 
+    // Dictionary to map anchors to snow particle effects
     private Dictionary<ARAnchor, GameObject> anchorToSnowParticleMap = new Dictionary<ARAnchor, GameObject>();
 
     void Start()
@@ -73,7 +77,7 @@ public class ProjectileEventManager : MonoBehaviour
         anchorManager.trackablesChanged.RemoveListener(OnTrackablesChanged);
     }
 
-    void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> eventArgs) //update tracked image positions
+    void OnImageChanged(ARTrackablesChangedEventArgs<ARTrackedImage> eventArgs) // Spawn, update, and remove the target cube
     {
         foreach (var trackedImage in eventArgs.added)
         {
@@ -91,7 +95,7 @@ public class ProjectileEventManager : MonoBehaviour
         }
     }
 
-    public void OnTrackablesChanged(ARTrackablesChangedEventArgs<ARAnchor> eventArgs) //update the snow particle position when the anchor is updated
+    public void OnTrackablesChanged(ARTrackablesChangedEventArgs<ARAnchor> eventArgs) // Update the snow particle effects
     {
         foreach (var anchor in eventArgs.updated)
         {
@@ -178,7 +182,6 @@ public class ProjectileEventManager : MonoBehaviour
         }
     }
 
-
     public void FireBadminton()
     {
         GameObject shuttle = Instantiate(badmintonPrefab, badmintonSpawnPoint.position, MainCamera.rotation);
@@ -220,6 +223,7 @@ public class ProjectileEventManager : MonoBehaviour
             FireAtTemporaryTarget(missile, golfSpawnPoint, true);
         }
     }
+
     public void FireFencing()
     {
         GameObject bullet = Instantiate(fencingPrefab, fencingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
@@ -268,6 +272,11 @@ public class ProjectileEventManager : MonoBehaviour
             {
                 GameObject snowParticleInstance = Instantiate(snowParticlePrefab, position, Quaternion.identity);
                 snowParticleInstance.transform.SetParent(anchor.value.transform);
+                SnowParticleProjectile snowParticleProjectile = snowParticleInstance.GetComponent<SnowParticleProjectile>();
+                if (snowParticleProjectile != null)
+                {
+                    snowParticleProjectile.target = trackedTarget.transform;
+                }
             }
             else
             {

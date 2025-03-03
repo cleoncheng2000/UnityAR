@@ -30,6 +30,7 @@ using UnityEngine.UI;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using M2MqttUnity;
+using Newtonsoft.Json; 
 
 /// <summary>
 /// Examples for the M2MQTT library (https://github.com/eclipse/paho.mqtt.m2mqtt),
@@ -58,7 +59,7 @@ namespace M2MqttUnity.Examples
 
         public void TestPublish()
         {
-            client.Publish("group21/visualiser", System.Text.Encoding.UTF8.GetBytes("Test message"), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+            client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes("Test message"), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
             Debug.Log("Test message published");
             AddUiMessage("Test message published.");
         }
@@ -123,11 +124,13 @@ namespace M2MqttUnity.Examples
         protected override void SubscribeTopics()
         {
             client.Subscribe(new string[] { "group21/game_state" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+            client.Subscribe(new string[] { "group21/query" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
         }
 
         protected override void UnsubscribeTopics()
         {
             client.Unsubscribe(new string[] { "group21/game_state" });
+            client.Unsubscribe(new string[] { "group21/query" });
         }
 
         protected override void OnConnectionFailed(string errorMessage)
@@ -205,6 +208,30 @@ namespace M2MqttUnity.Examples
             string msg = System.Text.Encoding.UTF8.GetString(message);
             Debug.Log("Received: " + msg);
             StoreMessage(msg);
+
+            if (topic == "group21/query" || topic == "group21/game_state")
+            {
+                AddUiMessage($"Received on {topic}: {msg}");
+            }
+
+            if (topic == "group21/query")
+            {
+                // Manually parse the message
+                if (msg.StartsWith("{\"query\": \"") && msg.EndsWith("\"}"))
+                {
+                    string queryValue = msg.Substring("{\"query\": \"".Length, msg.Length - "{\"query\": \"".Length - 2).Trim();
+
+                    if (queryValue == "is_opponent_visible")
+                    {
+                        bool isVisible = UnityEngine.Random.Range(0, 2) == 1;
+                        string response = JsonConvert.SerializeObject(new { is_opponent_visible = isVisible });
+                        client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+                        Debug.Log("Published response: " + response);
+                        AddUiMessage("Published response: " + response);
+                    }
+                }
+            }
+
             if (topic == "M2MQTT_Unity/test")
             {
                 if (autoTest)
@@ -214,7 +241,6 @@ namespace M2MqttUnity.Examples
                 }
             }
         }
-
         private void StoreMessage(string eventMsg)
         {
             eventMessages.Add(eventMsg);
