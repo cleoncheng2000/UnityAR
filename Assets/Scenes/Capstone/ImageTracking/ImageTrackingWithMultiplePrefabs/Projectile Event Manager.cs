@@ -38,7 +38,7 @@ public class ProjectileEventManager : MonoBehaviour
     public Transform fencingSpawnPoint;
 
 
-    private GameObject trackedTarget; // Store the spawned cube reference
+    public GameObject trackedTarget; // Store the spawned cube reference
     private GameObject shieldInstance; // Store the spawned shield reference
 
     // UI buttons for different projectiles
@@ -257,7 +257,7 @@ public class ProjectileEventManager : MonoBehaviour
         }
     }
 
-    private bool IsTargetInView(Transform target)
+    public bool IsTargetInView(Transform target)
     {
         Vector3 viewportPoint = MainCamera.GetComponent<Camera>().WorldToViewportPoint(target.position);
         return viewportPoint.x >= 0 && viewportPoint.x <= 1 && viewportPoint.y >= 0 && viewportPoint.y <= 1 && viewportPoint.z > 0;

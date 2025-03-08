@@ -30,7 +30,7 @@ using UnityEngine.UI;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using M2MqttUnity;
-using Newtonsoft.Json; 
+using Newtonsoft.Json;
 
 /// <summary>
 /// Examples for the M2MQTT library (https://github.com/eclipse/paho.mqtt.m2mqtt),
@@ -53,9 +53,23 @@ namespace M2MqttUnity.Examples
         public Button disconnectButton;
         public Button testPublishButton;
         public Button clearButton;
+        public ProjectileEventManager projectileEventManager;
+        public HUDManager HUDManager;
 
         private List<string> eventMessages = new List<string>();
         private bool updateUI = false;
+
+
+
+        public class PlayerState
+        {
+            public int hp { get; set; }
+            public int bullets { get; set; }
+            public int bombs { get; set; }
+            public int shield_hp { get; set; }
+            public int deaths { get; set; }
+            public int shields { get; set; }
+        }
 
         public void TestPublish()
         {
@@ -114,6 +128,7 @@ namespace M2MqttUnity.Examples
         {
             base.OnConnected();
             SetUiMessage("Connected to broker on " + brokerAddress + "\n");
+            //Debug.Log("AMEN");
 
             if (autoTest)
             {
@@ -223,7 +238,8 @@ namespace M2MqttUnity.Examples
 
                     if (queryValue == "is_opponent_visible")
                     {
-                        bool isVisible = UnityEngine.Random.Range(0, 2) == 1;
+                        bool isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                        Debug.Log(isVisible);
                         string response = JsonConvert.SerializeObject(new { is_opponent_visible = isVisible });
                         client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
                         Debug.Log("Published response: " + response);
@@ -231,7 +247,12 @@ namespace M2MqttUnity.Examples
                     }
                 }
             }
-
+            if (topic == "group21/game_state")
+            { //parse game state stuff 
+                PlayerState playerState = JsonConvert.DeserializeObject<PlayerState>(msg);
+                HUDManager.UpdatePlayerState(playerState.hp, playerState.shields, playerState.shield_hp, playerState.bullets, playerState.bombs, playerState.deaths);
+                Debug.Log("hp: " + playerState.hp + " bullets: " + playerState.bullets + " bombs: " + playerState.bombs + " shield_hp: " + playerState.shield_hp + " deaths: " + playerState.deaths + " shields: " + playerState.shields);
+            }
             if (topic == "M2MQTT_Unity/test")
             {
                 if (autoTest)

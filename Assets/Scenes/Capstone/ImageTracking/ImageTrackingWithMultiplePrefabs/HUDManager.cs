@@ -44,6 +44,7 @@ public class HUDManager : MonoBehaviour
     private int currentShieldHealth;
     private int currentAmmo;
     private int currentBomb;
+    private int currentDeaths;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -183,6 +184,18 @@ public class HUDManager : MonoBehaviour
         currentAmmo = maxAmmo;
         UpdateHUD();
     }
+
+    public void UpdatePlayerState(int hp, int shields, int shield_hp, int bullets, int bombs, int deaths)
+    {
+        currentHealth = hp;
+        currentShield = shields;
+        currentShieldHealth = shield_hp;
+        currentAmmo = bullets;
+        currentBomb = bombs;
+        currentDeaths = deaths;
+        UpdateHUD();
+    }
+
 
     void UpdateHUD()
     {

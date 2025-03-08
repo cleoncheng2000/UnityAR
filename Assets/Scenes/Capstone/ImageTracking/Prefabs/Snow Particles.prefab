@@ -4857,5 +4857,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   target: {fileID: 1802353116920051986, guid: 40bb26f520f20974c965e86303e69cad, type: 3}
-  range: 1
+  range: 0.1
   damageCooldown: 3

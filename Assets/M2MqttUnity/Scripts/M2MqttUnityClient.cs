@@ -57,9 +57,9 @@ namespace M2MqttUnity
         [Tooltip("Connect on startup")]
         public bool autoConnect = false;
         [Tooltip("UserName for the MQTT broker. Keep blank if no user name is required.")]
-        public string mqttUserName = null;
+        public string mqttUserName = "hivemq.webclient.1741332185289";
         [Tooltip("Password for the MQTT broker. Keep blank if no password is required.")]
-        public string mqttPassword = null;
+        public string mqttPassword = "3#.2!*01IJQZbafAcdgC";
         
         /// <summary>
         /// Wrapped MQTT client
