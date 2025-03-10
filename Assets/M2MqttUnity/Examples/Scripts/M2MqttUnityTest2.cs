@@ -1,4 +1,4 @@
-﻿/*
+/*
 The MIT License (MIT)
 
 Copyright (c) 2018 Giovanni Paolo Vigano'
@@ -31,6 +31,7 @@ using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using M2MqttUnity;
 using Newtonsoft.Json;
+using System.ComponentModel.Composition;
 
 /// <summary>
 /// Examples for the M2MQTT library (https://github.com/eclipse/paho.mqtt.m2mqtt),
@@ -40,6 +41,8 @@ namespace M2MqttUnity.Examples
     /// <summary>
     /// Script for testing M2MQTT with a Unity UI
     /// </summary>
+    /// 
+
     public class M2MqttUnityTest : M2MqttUnityClient
     {
         [Tooltip("Set this to true to perform a testing cycle automatically on startup")]
@@ -55,22 +58,10 @@ namespace M2MqttUnity.Examples
         public Button clearButton;
         public ProjectileEventManager projectileEventManager;
         public HUDManager HUDManager;
+        public Image connectionStatusImage;
 
         private List<string> eventMessages = new List<string>();
         private bool updateUI = false;
-
-
-
-        public class PlayerState
-        {
-            public int hp { get; set; }
-            public int bullets { get; set; }
-            public int bombs { get; set; }
-            public int shield_hp { get; set; }
-            public int deaths { get; set; }
-            public int shields { get; set; }
-        }
-
         public void TestPublish()
         {
             client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes("Test message"), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
@@ -122,14 +113,14 @@ namespace M2MqttUnity.Examples
         {
             base.OnConnecting();
             SetUiMessage("Connecting to broker on " + brokerAddress + ":" + brokerPort.ToString() + "...\n");
+            updateConectionStatus("connecting");
         }
 
         protected override void OnConnected()
         {
             base.OnConnected();
             SetUiMessage("Connected to broker on " + brokerAddress + "\n");
-            //Debug.Log("AMEN");
-
+            updateConectionStatus("connected");
             if (autoTest)
             {
                 TestPublish();
@@ -156,11 +147,13 @@ namespace M2MqttUnity.Examples
         protected override void OnDisconnected()
         {
             AddUiMessage("Disconnected.");
+            updateConectionStatus("disconnected");
         }
 
         protected override void OnConnectionLost()
         {
             AddUiMessage("CONNECTION LOST!");
+            updateConectionStatus("disconnected");
         }
 
         private void UpdateUI()
@@ -224,34 +217,53 @@ namespace M2MqttUnity.Examples
             Debug.Log("Received: " + msg);
             StoreMessage(msg);
 
-            if (topic == "group21/query" || topic == "group21/game_state")
-            {
-                AddUiMessage($"Received on {topic}: {msg}");
-            }
-
             if (topic == "group21/query")
             {
-                // Manually parse the message
-                if (msg.StartsWith("{\"query\": \"") && msg.EndsWith("\"}"))
+                // Check if the message contains the expected query
+                if (msg.Contains("\"query\": \"is_opponent_visible\""))
                 {
-                    string queryValue = msg.Substring("{\"query\": \"".Length, msg.Length - "{\"query\": \"".Length - 2).Trim();
+                    bool isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
 
-                    if (queryValue == "is_opponent_visible")
-                    {
-                        bool isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
-                        Debug.Log(isVisible);
-                        string response = JsonConvert.SerializeObject(new { is_opponent_visible = isVisible });
-                        client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
-                        Debug.Log("Published response: " + response);
-                        AddUiMessage("Published response: " + response);
-                    }
+                    // Create response JSON manually
+                    string response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") + "}";
+
+                    Debug.Log("Response: " + response);
+
+                    // Publish response
+                    client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+                    Debug.Log("Published response: " + response);
+                    AddUiMessage("Published response: " + response);
                 }
             }
             if (topic == "group21/game_state")
             { //parse game state stuff 
-                PlayerState playerState = JsonConvert.DeserializeObject<PlayerState>(msg);
-                HUDManager.UpdatePlayerState(playerState.hp, playerState.shields, playerState.shield_hp, playerState.bullets, playerState.bombs, playerState.deaths);
-                Debug.Log("hp: " + playerState.hp + " bullets: " + playerState.bullets + " bombs: " + playerState.bombs + " shield_hp: " + playerState.shield_hp + " deaths: " + playerState.deaths + " shields: " + playerState.shields);
+                try
+                {
+                    // Parse game state stuff
+                    //msg = JsonConvert.DeserializeObject<string>(msg);
+                    GameData gameData = JsonConvert.DeserializeObject<GameData>(msg);
+
+                    // Access P1's attributes
+                    Player p1State = gameData.game_state.p1;
+                    Player p2State = gameData.game_state.p2;
+
+                    // Update HUD with correct values
+                    HUDManager.UpdatePlayer(p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p1State.deaths, p2State.deaths);
+                    projectileEventManager.UpdateAction(gameData.p1_action);
+                }
+                catch (ArgumentException ex)
+                {
+                    Debug.LogError("Error converting JSON to GameData: " + ex.Message);
+                }
+                catch (JsonSerializationException ex)
+                {
+                    Debug.LogError("Error deserializing GameData: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("Unexpected error: " + ex.Message);
+                }
+
             }
             if (topic == "M2MQTT_Unity/test")
             {
@@ -300,6 +312,25 @@ namespace M2MqttUnity.Examples
             if (autoTest)
             {
                 autoConnect = true;
+            }
+        }
+
+        public void updateConectionStatus(string status)
+        {
+            switch (status)
+            {
+                case "connected":
+                    connectionStatusImage.color = Color.green;
+                    break;
+                case "disconnected":
+                    connectionStatusImage.color = Color.red;
+                    break;
+                case "connecting":
+                    connectionStatusImage.color = Color.yellow;
+                    break;
+                default:
+                    connectionStatusImage.color = Color.red;
+                    break;
             }
         }
     }

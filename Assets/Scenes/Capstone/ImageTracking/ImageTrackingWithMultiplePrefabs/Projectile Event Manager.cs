@@ -257,6 +257,12 @@ public class ProjectileEventManager : MonoBehaviour
         }
     }
 
+    public void Reload() 
+    {
+        GunRecoil gunController = MainCamera.GetComponentInChildren<GunRecoil>();
+        gunController.Reload();
+    }
+
     public bool IsTargetInView(Transform target)
     {
         Vector3 viewportPoint = MainCamera.GetComponent<Camera>().WorldToViewportPoint(target.position);
@@ -304,4 +310,36 @@ public class ProjectileEventManager : MonoBehaviour
         Destroy(tempTarget, 3f); // Clean up the temporary target after 3 seconds
     }
 
+    public void UpdateAction(string action)
+    {
+        switch (action)
+        {
+            case "bomb":
+                FireBomb();
+                break;
+            case "gun":
+                FireBullet();
+                break;
+            case "badminton":
+                FireBadminton();
+                break;
+            case "golf":
+                FireGolf();
+                break;
+            case "boxing":
+                FireBoxing();
+                break;
+            case "fencing":
+                FireFencing();
+                break;
+            case "shield":
+                ToggleShield();
+                break;
+            case "reload":
+                Reload();
+                break; 
+            default:
+                break;
+        }
+    }
 }
