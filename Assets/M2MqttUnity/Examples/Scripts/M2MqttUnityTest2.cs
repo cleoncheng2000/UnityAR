@@ -248,7 +248,8 @@ namespace M2MqttUnity.Examples
                     Player p2State = gameData.game_state.p2;
 
                     // Update HUD with correct values
-                    HUDManager.UpdatePlayer(p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p1State.deaths, p2State.deaths);
+                    HUDManager.UpdatePlayer(HUDManager.p1, p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p2State.deaths);
+                    HUDManager.UpdatePlayer(HUDManager.p2, p2State.hp, p2State.shields, p2State.shield_hp, p2State.bullets, p2State.bombs, p2State.deaths);
                     projectileEventManager.UpdateAction(gameData.p1_action);
                 }
                 catch (ArgumentException ex)

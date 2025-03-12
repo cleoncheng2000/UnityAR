@@ -46,18 +46,11 @@ public class HUDManager : MonoBehaviour
     public int maxAmmo = 6;
     public int maxBomb = 2;
 
-    //Timer value
-    private float timeRemaining = 300f;
+    //Player stats
+    public Player p1 = new Player();
+    public Player p2 = new Player();
 
-    //Current values of stats
-    private int currentHealth;
-    private int currentShield;
-    private int currentShieldHealth;
-    private int currentAmmo;
-    private int currentBomb;
-    private int currentDeaths;
-    private int currentP1Score;
-    private int currentP2Score;
+
 
     private float lerpTimer;
     public float chipSpeed = 5f;
@@ -67,13 +60,8 @@ public class HUDManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentHealth = maxHealth;
-        currentShield = maxShield;
-        currentAmmo = maxAmmo;
-        currentBomb = maxBomb;
-        currentShieldHealth = 0;
+
         shieldImage.mainScale = 0;
-        currentDeaths = 0;
         lerpTimer = 0f;
         UpdateHUD();
         if (damageSmallButton != null)
@@ -112,46 +100,38 @@ public class HUDManager : MonoBehaviour
 
     void Update()
     {
-        // Decrease the timer each frame
-        if (timeRemaining > 0)
-        {
-            timeRemaining -= Time.deltaTime;
-        }
-        else
-        {
-            timeRemaining = 0; // Ensure the timer doesn't go below zero
-        }
-
         // Update the timer display
-        UpdateBarUI(P1HealthBarFront, P1HealthBarBack, currentHealth, maxHealth);
-        UpdateBarUI(P1ShieldBarFront, P1ShieldBarBack, currentShieldHealth, maxShieldHealth);
+        UpdateBarUI(P1HealthBarFront, P1HealthBarBack, p1.hp, maxHealth);
+        UpdateBarUI(P1ShieldBarFront, P1ShieldBarBack, p1.shield_hp, maxShieldHealth);
+        UpdateBarUI(P2HealthBarFront, P2HealthBarBack, p2.hp, maxHealth);
+        UpdateBarUI(P2ShieldBarFront, P2ShieldBarBack, p2.shield_hp, maxShieldHealth);
     }
 
     public void TakeDamage(int damage)
     {
-        if (currentShieldHealth > 0)
+        if (p1.shield_hp > 0)
         {
-            if (damage < currentShieldHealth)
+            if (damage < p1.shield_hp)
             {
-                currentShieldHealth -= damage;
+                p1.shield_hp -= damage;
                 damage = 0;
             }
             else
             {
-                damage -= currentShieldHealth;
-                currentShieldHealth = 0;
+                damage -= p1.shield_hp;
+                p1.shield_hp = 0;
                 shieldImage.mainScale = 0;
             }
         }
         if (damage > 0)
         {
-            currentHealth -= damage;
+            p1.hp -= damage;
         }
-        if (currentHealth < 0)
+        if (p1.hp < 0)
         {
-            currentHealth = 0;
+            p1.hp = 0;
         }
-        Debug.Log("current hp = " + currentHealth);
+        Debug.Log("current hp = " + p1.hp);
         UpdateHUD();
     }
 
@@ -161,11 +141,11 @@ public class HUDManager : MonoBehaviour
 
     public void SelfShield() //toggles self shield
     {
-        if (currentShieldHealth == 0 && currentShield > 0)
+        if (p1.shield_hp == 0 && p1.shields > 0)
         {
             shieldImage.mainScale = 1f;
-            currentShieldHealth = maxShieldHealth;
-            currentShield--;
+            p1.shield_hp = maxShieldHealth;
+            p1.shields--;
         }
         UpdateHUD();
     }
@@ -184,50 +164,48 @@ public class HUDManager : MonoBehaviour
 
     public void Shoot()
     {
-        if (currentAmmo > 0)
+        if (p1.bullets > 0)
         {
-            currentAmmo--;
+            p1.bullets--;
             UpdateHUD();
         }
     }
 
     public void UseBomb()
     {
-        if (currentBomb > 0)
+        if (p1.bombs > 0)
         {
-            currentBomb--;
+            p1.bombs--;
             UpdateHUD();
         }
     }
 
     public void Reload()
     {
-        currentAmmo = maxAmmo;
+        p1.bullets = maxAmmo;
         UpdateHUD();
     }
 
-    public void UpdatePlayer(int hp, int shields, int shield_hp, int bullets, int bombs, int p1deaths, int p2deaths)
+    public void UpdatePlayer(Player player, int hp, int shields, int shield_hp, int bullets, int bombs, int deaths)
     {
-        currentHealth = hp;
-        currentShield = shields;
-        currentShieldHealth = shield_hp;
-        currentAmmo = bullets;
-        currentBomb = bombs;
-        currentDeaths = p1deaths;
-        currentP1Score = p1deaths;
-        currentP2Score = p2deaths;
+        player.hp = hp;
+        player.shields = shields;
+        player.shield_hp = shield_hp;
+        player.bullets = bullets;
+        player.bombs = bombs;
+        player.deaths = deaths;
         UpdateHUD();
     }
 
 
     void UpdateHUD()
     {
-        healthText.text = currentHealth.ToString();
-        shieldText.text = currentShield.ToString();
-        ammoText.text = currentAmmo.ToString();
-        bombText.text = currentBomb.ToString();
-        shieldHealthText.text = currentShieldHealth.ToString();
-        scoreText.text = currentP1Score.ToString() + " : " + currentP2Score.ToString();
+        healthText.text = p1.hp.ToString();
+        shieldText.text = p1.shields.ToString();
+        ammoText.text = p1.bullets.ToString();
+        bombText.text = p1.bombs.ToString();
+        shieldHealthText.text = p1.shield_hp.ToString();
+        scoreText.text = p2.deaths.ToString() + " : " + p1.deaths.ToString();
     }
 
     public void UpdateBarUI(Image frontBar, Image backBar, int currentAmount, int maxAmount)

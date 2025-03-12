@@ -6426,10 +6426,10 @@ MonoBehaviour:
   P1HealthBarBack: {fileID: 373063650}
   P1ShieldBarFront: {fileID: 2039723593}
   P1ShieldBarBack: {fileID: 1110004536}
-  P2HealthBarFront: {fileID: 0}
-  P2HealthBarBack: {fileID: 0}
-  P2ShieldBarFront: {fileID: 0}
-  P2ShieldBarBack: {fileID: 0}
+  P2HealthBarFront: {fileID: 393297556}
+  P2HealthBarBack: {fileID: 1515989948}
+  P2ShieldBarFront: {fileID: 580779955}
+  P2ShieldBarBack: {fileID: 362585308}
   damageSmallButton: {fileID: 879218369}
   damageLargeButton: {fileID: 248355031}
   shieldButton: {fileID: 1575724749}
@@ -7581,19 +7581,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2087134257}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11500000, guid: 66437881277c4b44c93d9c12315f35c3, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2087134257
 MonoBehaviour:
   m_ObjectHideFlags: 0
