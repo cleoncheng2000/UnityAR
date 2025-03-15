@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a1c1d987c77f2a743803b242ea89854e
+timeCreated: 1492620729
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 88499
+  packageName: VR Eye Shaders
+  packageVersion: 0.1
+  assetPath: Assets/Nurface/VREyeShaders/Shaders/Unlit-EyeSeparationUVs.shader
+  uploadId: 175346

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
+using UnityEngine.XR.OpenXR.Features.Interactions;
 
 public class HUDManager : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class HUDManager : MonoBehaviour
     public Button bombButton;
     public Button reloadButton;
     public Button selfShieldButton;
+    public Button VRButton;
 
     //Max values of stats
     public int maxHealth = 100;
@@ -50,10 +52,14 @@ public class HUDManager : MonoBehaviour
     public Player p1 = new Player();
     public Player p2 = new Player();
 
-
+    //VR
+    public RenderTexture VRRenderTexture;
+    public Canvas VRCanvas;
+    private bool isVR = false;
 
     private float lerpTimer;
     public float chipSpeed = 5f;
+
 
 
 
@@ -96,6 +102,10 @@ public class HUDManager : MonoBehaviour
         {
             selfShieldButton.onClick.AddListener(SelfShield);
         }
+        if (VRButton != null)
+        {
+            VRButton.onClick.AddListener(EnterVR);
+        }
     }
 
     void Update()
@@ -105,6 +115,10 @@ public class HUDManager : MonoBehaviour
         UpdateBarUI(P1ShieldBarFront, P1ShieldBarBack, p1.shield_hp, maxShieldHealth);
         UpdateBarUI(P2HealthBarFront, P2HealthBarBack, p2.hp, maxHealth);
         UpdateBarUI(P2ShieldBarFront, P2ShieldBarBack, p2.shield_hp, maxShieldHealth);
+        if (isVR && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            ExitVR();
+        }
     }
 
     public void TakeDamage(int damage)
@@ -195,6 +209,7 @@ public class HUDManager : MonoBehaviour
         player.bombs = bombs;
         player.deaths = deaths;
         UpdateHUD();
+        UpdateShield();
     }
 
 
@@ -207,6 +222,20 @@ public class HUDManager : MonoBehaviour
         shieldHealthText.text = p1.shield_hp.ToString();
         scoreText.text = p2.deaths.ToString() + " : " + p1.deaths.ToString();
     }
+
+    public void UpdateShield()
+    {
+        if (p1.shield_hp > 0)
+        {
+            shieldImage.mainScale = 1f;
+        }
+        else
+        {
+            shieldImage.mainScale = 0;
+        }
+    }
+
+
 
     public void UpdateBarUI(Image frontBar, Image backBar, int currentAmount, int maxAmount)
     {
@@ -240,5 +269,23 @@ public class HUDManager : MonoBehaviour
                 lerpTimer = 0f; // Reset lerpTimer after animation completes
             }
         }
+    }
+
+    public void EnterVR()
+    {
+        Camera.main.targetTexture = VRRenderTexture;
+        VRCanvas.gameObject.SetActive(true);
+        isVR = true;
+    }
+
+    public void ExitVR()
+    {
+        if (isVR)
+        {
+            Camera.main.targetTexture = null;
+            VRCanvas.gameObject.SetActive(false);
+            isVR = false;
+        }
+
     }
 }

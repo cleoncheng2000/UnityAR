@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 24dbee4b4bc7974478e8a2d468dcf03d
+timeCreated: 1492632942
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 88499
+  packageName: VR Eye Shaders
+  packageVersion: 0.1
+  assetPath: Assets/Nurface/VREyeShaders/Shaders/VertexLit-EyeSeparation-Vertices.shader
+  uploadId: 175346

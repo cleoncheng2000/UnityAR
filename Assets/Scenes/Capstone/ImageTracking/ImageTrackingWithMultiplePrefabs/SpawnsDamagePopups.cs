@@ -14,6 +14,7 @@ public class SpawnsDamagePopups : MonoBehaviour
     [Header("Display Setup")]
     [Range(0.8f, 1.5f), SerializeField] public float displayLength = 1f;
     private Camera _mainCamera;
+
     private void Awake()
     {
         if (Instance == null)
@@ -55,13 +56,27 @@ public class SpawnsDamagePopups : MonoBehaviour
             Debug.LogError("MainCamera is null");
             return;
         }
-        Vector3 screenPosition = _mainCamera.WorldToScreenPoint(position);
-        screenPosition.z = 0;
-        bool direction = screenPosition.x < Screen.width * 0.5f;
 
+        // Get Render Texture dimensions (fallback to Screen size if not using Render Texture)
+        int renderWidth = _mainCamera.targetTexture != null ? _mainCamera.targetTexture.width : Screen.width;
+        int renderHeight = _mainCamera.targetTexture != null ? _mainCamera.targetTexture.height : Screen.height;
+
+        // Convert world position to viewport space
+        Vector3 viewportPosition = _mainCamera.WorldToScreenPoint(position);
+
+        // Convert viewport position to render texture space
+        Vector3 screenPosition = new Vector3(
+            viewportPosition.x * renderWidth,
+            viewportPosition.y * renderHeight,
+            0
+        );
+
+        // Determine popup direction
+        bool direction = screenPosition.x < renderWidth * 0.5f;
+
+        // Spawn damage popup
         SpawnDamagePopup(damage, screenPosition, direction, isCrit);
     }
-
     private void SpawnDamagePopup(int damage, Vector3 position, bool direction, bool isCrit)
     {
         DamageLabel damageLabel = _damageLabelPopupPool.Get();

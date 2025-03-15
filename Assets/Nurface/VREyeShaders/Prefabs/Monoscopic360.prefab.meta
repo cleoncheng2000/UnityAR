@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d3f0c2a72971f804e9024a700bf143e8
+timeCreated: 1492667066
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 88499
+  packageName: VR Eye Shaders
+  packageVersion: 0.1
+  assetPath: Assets/Nurface/VREyeShaders/Prefabs/Monoscopic360.prefab
+  uploadId: 175346

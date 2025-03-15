@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: df715a4179c51df429b7d193022877ee
+timeCreated: 1492666637
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 88499
+  packageName: VR Eye Shaders
+  packageVersion: 0.1
+  assetPath: Assets/Nurface/VREyeShaders/Documentation/VREyeShadersv01.pdf
+  uploadId: 175346

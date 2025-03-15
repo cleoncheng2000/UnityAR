@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 244954de2059522429241cedcbde3d76
+timeCreated: 1490384178
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 88499
+  packageName: VR Eye Shaders
+  packageVersion: 0.1
+  assetPath: Assets/Nurface/VREyeShaders/Materials/matEyeBoth.mat
+  uploadId: 175346

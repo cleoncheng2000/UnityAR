@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 80317bb47aaa32248941e3455a25623e
+timeCreated: 1492660396
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 88499
+  packageName: VR Eye Shaders
+  packageVersion: 0.1
+  assetPath: Assets/Nurface/VREyeShaders/Demo/VREyeShaderStereo.unity
+  uploadId: 175346
