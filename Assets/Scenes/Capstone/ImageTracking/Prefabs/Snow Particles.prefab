@@ -4855,7 +4855,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86e1e2cefca57a4cb011b933b0590c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 5
   target: {fileID: 1802353116920051986, guid: 40bb26f520f20974c965e86303e69cad, type: 3}
   range: 1
   damageCooldown: 3
+  isInRange: 0

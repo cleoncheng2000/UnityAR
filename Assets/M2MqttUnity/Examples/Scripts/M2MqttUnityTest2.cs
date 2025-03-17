@@ -224,8 +224,11 @@ namespace M2MqttUnity.Examples
                 {
                     bool isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
 
+                    int snowBombs = projectileEventManager.GetSnowParticleCount();
+
                     // Create response JSON manually
-                    string response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") + "}";
+                    string response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") + 
+                  ", \"snow_bombs\": " + snowBombs + "}";
 
                     Debug.Log("Response: " + response);
 
@@ -250,7 +253,7 @@ namespace M2MqttUnity.Examples
                     // Update HUD with correct values
                     HUDManager.UpdatePlayer(HUDManager.p1, p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p2State.deaths);
                     HUDManager.UpdatePlayer(HUDManager.p2, p2State.hp, p2State.shields, p2State.shield_hp, p2State.bullets, p2State.bombs, p2State.deaths);
-                    projectileEventManager.UpdateAction(gameData.p1_action);
+                    projectileEventManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
                 }
                 catch (ArgumentException ex)
                 {

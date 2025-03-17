@@ -6,6 +6,8 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
+using System.Linq;
+using Unity.Multiplayer.Center.Common;
 
 public class ProjectileEventManager : MonoBehaviour
 {
@@ -53,6 +55,7 @@ public class ProjectileEventManager : MonoBehaviour
 
     // Dictionary to map anchors to snow particle effects
     private Dictionary<ARAnchor, GameObject> anchorToSnowParticleMap = new Dictionary<ARAnchor, GameObject>();
+    private int snowParticleCount = 0;
 
     void Start()
     {
@@ -62,7 +65,11 @@ public class ProjectileEventManager : MonoBehaviour
         golfButton.onClick.AddListener(FireGolf);
         boxingButton.onClick.AddListener(FireBoxing);
         fencingButton.onClick.AddListener(FireFencing);
-        shieldButton.onClick.AddListener(ToggleShield);
+        shieldButton.onClick.AddListener(() => ToggleShield(5));
+    }
+
+    void Update()
+    {
     }
 
     void OnEnable()
@@ -152,7 +159,7 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-            bomb.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true);
+            bomb.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
             CreateSnowParticleEffect(trackedTarget.transform.position);
 
         }
@@ -162,7 +169,7 @@ public class ProjectileEventManager : MonoBehaviour
             Vector3 forwardPosition = MainCamera.position + MainCamera.forward * 3f;
             GameObject tempTarget = new GameObject("TempTarget");
             tempTarget.transform.position = forwardPosition;
-            bomb.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false);
+            bomb.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false, 0);
             CreateSnowParticleEffect(tempTarget.transform.position);
             Destroy(tempTarget, 3f); // Clean up the temporary target after 3 seconds
         }
@@ -174,7 +181,8 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-            bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true);
+
+            bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
         }
         else
         {
@@ -188,7 +196,7 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-            shuttle.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true);
+            shuttle.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
         }
         else
         {
@@ -202,7 +210,7 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-            glove.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true);
+            glove.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
         }
         else
         {
@@ -216,7 +224,7 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-            missile.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true);
+            missile.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
         }
         else
         {
@@ -230,7 +238,7 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-            bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true);
+            bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
         }
         else
         {
@@ -238,29 +246,41 @@ public class ProjectileEventManager : MonoBehaviour
         }
     }
 
-    public void ToggleShield()
+    public void ToggleShield(int shieldHp)
     {
-        if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
+        if (shieldHp > 0)
         {
-            if (shieldInstance == null)
+            if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
             {
-                // Spawn the shield
-                shieldInstance = Instantiate(shieldPrefab, trackedTarget.transform.position, trackedTarget.transform.rotation);
-                shieldInstance.transform.parent = trackedTarget.transform;
+                if (shieldInstance == null)
+                {
+                    // Spawn the shield
+                    shieldInstance = Instantiate(shieldPrefab, trackedTarget.transform.position, trackedTarget.transform.rotation);
+                    shieldInstance.transform.parent = trackedTarget.transform;
+                    Debug.Log("Shield activated.");
+                }
             }
-            else
+        }
+        else
+        {
+            // Despawn the shield if HP is 0 or less
+            if (shieldInstance != null)
             {
-                // Despawn the shield
                 Destroy(shieldInstance);
                 shieldInstance = null;
+                Debug.Log("Shield deactivated due to 0 HP.");
             }
         }
     }
 
-    public void Reload() 
+    public void Reload()
     {
         GunRecoil gunController = MainCamera.GetComponentInChildren<GunRecoil>();
         gunController.Reload();
+        if (snowParticleCount > 0)
+        {
+            SpawnsDamagePopups.Instance.DamageDone(5 * snowParticleCount, trackedTarget.transform.position, false);
+        }
     }
 
     public bool IsTargetInView(Transform target)
@@ -283,6 +303,7 @@ public class ProjectileEventManager : MonoBehaviour
                 {
                     snowParticleProjectile.target = trackedTarget.transform;
                 }
+
             }
             else
             {
@@ -300,18 +321,39 @@ public class ProjectileEventManager : MonoBehaviour
 
         if (isArcProjectile)
         {
-            missile.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false);
+            missile.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false, 0);
         }
         else
         {
-            missile.GetComponent<StraightProjectiles>().FireStraightProjectile(tempTarget.transform, false);
+            missile.GetComponent<StraightProjectiles>().FireStraightProjectile(tempTarget.transform, false, 0);
         }
 
         Destroy(tempTarget, 3f); // Clean up the temporary target after 3 seconds
     }
 
-    public void UpdateAction(string action)
+    // Method to increment the counter
+    public void IncrementSnowParticleCount()
     {
+        snowParticleCount++;
+        Debug.Log($"Snow particles in range: {snowParticleCount}");
+    }
+
+    // Method to decrement the counter
+    public void DecrementSnowParticleCount()
+    {
+        snowParticleCount = Mathf.Max(0, snowParticleCount - 1); // Ensure it doesn't go below 0
+        Debug.Log($"Snow particles in range: {snowParticleCount}");
+    }
+
+    // Method to get the current count
+    public int GetSnowParticleCount()
+    {
+        return snowParticleCount;
+    }
+
+    public void UpdateAction(string action, int p2ShieldHp)
+    {
+        ToggleShield(p2ShieldHp);
         switch (action)
         {
             case "bomb":
@@ -332,12 +374,9 @@ public class ProjectileEventManager : MonoBehaviour
             case "fencing":
                 FireFencing();
                 break;
-            case "shield":
-                ToggleShield();
-                break;
             case "reload":
                 Reload();
-                break; 
+                break;
             default:
                 break;
         }

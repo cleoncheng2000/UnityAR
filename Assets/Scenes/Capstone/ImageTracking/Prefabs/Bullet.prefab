@@ -134,6 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1802353116920051986, guid: 40bb26f520f20974c965e86303e69cad, type: 3}
   speed: 10
+  damage: 5
 --- !u!96 &3721865955261360866
 TrailRenderer:
   serializedVersion: 3

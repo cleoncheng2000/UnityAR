@@ -12,18 +12,20 @@ public class ArcProjectile : MonoBehaviour
     private Vector3 startPosition;
     private bool isFired = false;
     private bool isHit = false;
+    private int extraDamage;
 
     void Start()
     {
     }
 
-    public void FireArcProjectile(Transform newTarget, bool newIsHit)
+    public void FireArcProjectile(Transform newTarget, bool newIsHit, int newExtraDamage)
     {
         target = newTarget;
         startPosition = transform.position;
         startTime = Time.time;  // Record the time at which the missile is fired
         isFired = true;
         isHit = newIsHit;
+        extraDamage = newExtraDamage;
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class ArcProjectile : MonoBehaviour
             if (horizontalMovement >= distance)
             {
                 Destroy(gameObject);  // Destroy the missile when it reaches the target position
-                Damage(damage, isHit);
+                Damage(damage + extraDamage, isHit);
             }
         }
     }

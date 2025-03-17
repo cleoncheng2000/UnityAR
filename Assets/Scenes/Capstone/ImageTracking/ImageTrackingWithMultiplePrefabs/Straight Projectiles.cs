@@ -4,14 +4,17 @@ public class StraightProjectiles : MonoBehaviour
 {
     public Transform target;  // Reference to the target (cube prefab)
     public float speed = 5f;  // Speed at which the projectile moves
+    public int damage = 10;  // Damage dealt by the projectile
     private bool isFired = false;
     private bool isHit = false;
+    private int extraDamage = 0;
 
-    public void FireStraightProjectile(Transform newTarget, bool newIsHit)
+    public void FireStraightProjectile(Transform newTarget, bool newIsHit, int newExtraDamage)
     {
         target = newTarget;
         isFired = true;
         isHit = newIsHit;
+        extraDamage = newExtraDamage;
     }
 
     void Update()
@@ -25,7 +28,7 @@ public class StraightProjectiles : MonoBehaviour
             if (Vector3.Distance(transform.position, target.position) < 0.1f)
             {
                 Destroy(gameObject);  // Destroy the projectile
-                Damage(5, isHit);
+                Damage(damage + extraDamage, isHit);
             }
         }
     }

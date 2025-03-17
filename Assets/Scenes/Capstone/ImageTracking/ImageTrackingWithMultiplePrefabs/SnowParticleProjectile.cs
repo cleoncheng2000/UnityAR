@@ -3,21 +3,35 @@ using UnityEngine;
 
 public class SnowParticleProjectile : MonoBehaviour
 {
-    public int damage = 10;
+    public int damage = 5;
     public Transform target;
     public float range = 1.0f; // Define the range within which the target should be to take damage
     public float damageCooldown = 3.0f; // Cooldown period in seconds
+    public bool isInRange = false;
 
     private bool canDealDamage = true;
+    private ProjectileEventManager eventManager;
 
+    void Start()
+    {
+        eventManager = FindFirstObjectByType<ProjectileEventManager>();
+    }
     void Update()
     {
         if (target != null)
         {
             float distance = Vector3.Distance(transform.position, target.position);
-            if (distance <= range && canDealDamage)
+            bool wasInRange = isInRange;
+            isInRange = distance <= range;
+
+            // Notify the manager if the range status changes
+            if (isInRange && !wasInRange)
             {
-                StartCoroutine(DealDamageWithCooldown());
+                eventManager?.IncrementSnowParticleCount();
+            }
+            else if (!isInRange && wasInRange)
+            {
+                eventManager?.DecrementSnowParticleCount();
             }
         }
     }

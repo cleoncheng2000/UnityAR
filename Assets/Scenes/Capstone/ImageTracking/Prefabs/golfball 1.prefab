@@ -109,3 +109,5 @@ MonoBehaviour:
   target: {fileID: 1802353116920051986, guid: 40bb26f520f20974c965e86303e69cad, type: 3}
   throwSpeed: 2
   arcHeight: 1
+  damage: 10
+  snowParticlePrefab: {fileID: 0}
