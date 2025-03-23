@@ -98,7 +98,7 @@ public class ProjectileEventManager : MonoBehaviour
 
         foreach (var trackedImage in eventArgs.removed)
         {
-            RemoveTarget();
+            //RemoveTarget();
         }
     }
 
@@ -139,7 +139,7 @@ public class ProjectileEventManager : MonoBehaviour
             else
             {
                 // Disable the cube when tracking is lost
-                trackedTarget.SetActive(false);
+                //trackedTarget.SetActive(false);
             }
         }
     }

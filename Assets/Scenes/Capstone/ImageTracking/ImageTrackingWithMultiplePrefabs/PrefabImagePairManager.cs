@@ -103,7 +103,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
             }
             foreach (var trackedImage in eventArgs.removed)
             {
-                RemovePrefab(trackedImage);
+                //RemovePrefab(trackedImage);
             }
         }
 
@@ -121,7 +121,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
                 else
                 {
                     // Disable the prefab when tracking is lost
-                    prefab.SetActive(false);
+                    //prefab.SetActive(false);
                 }
             }
         }
