@@ -1075,7 +1075,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -70.00116, y: -82.99951}
+  m_AnchoredPosition: {x: -70.00128, y: -82.99951}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &356416520
@@ -1790,6 +1790,7 @@ GameObject:
   - component: {fileID: 615894110}
   - component: {fileID: 615894109}
   - component: {fileID: 615894108}
+  - component: {fileID: 615894112}
   m_Layer: 5
   m_Name: VR Canvas
   m_TagString: Untagged
@@ -1883,6 +1884,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &615894112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615894107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42f99e8b35a88ac458727fb2e76716d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftImage: {fileID: 2099372540}
+  rightImage: {fileID: 2128481208}
+  distanceBetweenImages: 800
+  imageSize: {x: 720, y: 680}
 --- !u!1001 &616756876
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3563,6 +3580,11 @@ PrefabInstance:
       propertyPath: m_RenderMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2813989103276015653, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
+        type: 3}
+      propertyPath: m_FacingDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3447509973923787363, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
         type: 3}
       propertyPath: m_UpdateType
@@ -3701,7 +3723,7 @@ PrefabInstance:
     - target: {fileID: 8766024634595469703, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
         type: 3}
       propertyPath: field of view
-      value: 62.08827
+      value: 88.50715
       objectReference: {fileID: 0}
     - target: {fileID: 8766024634595469703, guid: 8f2c1ffdafd49a943ac79dc0ff480220,
         type: 3}
