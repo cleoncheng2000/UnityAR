@@ -49,8 +49,9 @@ public class HUDManager : MonoBehaviour
     public int maxBomb = 2;
 
     //Player stats
-    public Player p1 = new Player();
-    public Player p2 = new Player();
+    public PlayerManager playerManager;
+    Player p1;
+    Player p2;
 
     //VR
     public RenderTexture VRRenderTexture;
@@ -68,6 +69,8 @@ public class HUDManager : MonoBehaviour
     {
 
         shieldImage.mainScale = 0;
+        p1 = playerManager.p1;
+        p2 = playerManager.p2;
         lerpTimer = 0f;
         UpdateHUD();
         if (damageSmallButton != null)
@@ -178,25 +181,25 @@ public class HUDManager : MonoBehaviour
 
     public void Shoot()
     {
-        if (p1.bullets > 0)
+        if (playerManager.GetCurrentPlayer().bullets > 0)
         {
-            p1.bullets--;
+            playerManager.GetCurrentPlayer().bullets--;
             UpdateHUD();
         }
     }
 
     public void UseBomb()
     {
-        if (p1.bombs > 0)
+        if (playerManager.GetCurrentPlayer().bombs > 0)
         {
-            p1.bombs--;
+            playerManager.GetCurrentPlayer().bombs--;
             UpdateHUD();
         }
     }
 
     public void Reload()
     {
-        p1.bullets = maxAmmo;
+        playerManager.GetCurrentPlayer().bullets = maxAmmo;
         UpdateHUD();
     }
 
@@ -215,17 +218,17 @@ public class HUDManager : MonoBehaviour
 
     void UpdateHUD()
     {
-        healthText.text = p1.hp.ToString();
-        shieldText.text = p1.shields.ToString();
-        ammoText.text = p1.bullets.ToString();
-        bombText.text = p1.bombs.ToString();
-        shieldHealthText.text = p1.shield_hp.ToString();
+        healthText.text = playerManager.GetCurrentPlayer().hp.ToString();
+        shieldText.text = playerManager.GetCurrentPlayer().shields.ToString();
+        ammoText.text = playerManager.GetCurrentPlayer().bullets.ToString();
+        bombText.text = playerManager.GetCurrentPlayer().bombs.ToString();
+        shieldHealthText.text = playerManager.GetCurrentPlayer().shield_hp.ToString();
         scoreText.text = p2.deaths.ToString() + " : " + p1.deaths.ToString();
     }
 
     public void UpdateShield()
     {
-        if (p1.shield_hp > 0)
+        if (playerManager.GetCurrentPlayer().shield_hp > 0)
         {
             shieldImage.mainScale = 1f;
         }

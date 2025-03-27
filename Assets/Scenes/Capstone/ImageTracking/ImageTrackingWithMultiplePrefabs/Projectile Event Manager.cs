@@ -285,6 +285,10 @@ public class ProjectileEventManager : MonoBehaviour
 
     public bool IsTargetInView(Transform target)
     {
+        if (target == null)
+        {
+            return false;
+        }
         Vector3 viewportPoint = MainCamera.GetComponent<Camera>().WorldToViewportPoint(target.position);
         return viewportPoint.x >= 0 && viewportPoint.x <= 1 && viewportPoint.y >= 0 && viewportPoint.y <= 1 && viewportPoint.z > 0;
     }

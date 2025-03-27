@@ -58,6 +58,7 @@ namespace M2MqttUnity.Examples
         public Button clearButton;
         public ProjectileEventManager projectileEventManager;
         public HUDManager HUDManager;
+        public PlayerManager playerManager;
         public Image connectionStatusImage;
 
         private List<string> eventMessages = new List<string>();
@@ -222,13 +223,32 @@ namespace M2MqttUnity.Examples
                 // Check if the message contains the expected query
                 if (msg.Contains("\"query\": \"is_opponent_visible\""))
                 {
-                    bool isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                    bool isVisible = false;
+                    if (projectileEventManager.trackedTarget != null)
+                    {
+                        isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                    }
+
 
                     int snowBombs = projectileEventManager.GetSnowParticleCount();
+                    string response;
+                    Player player = playerManager.GetCurrentPlayer();
 
-                    // Create response JSON manually
-                    string response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") + 
-                  ", \"snow_bombs\": " + snowBombs + "}";
+                    if (player == playerManager.p1)
+                    {
+                        response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
+                                          ", \"snow_bombs_hit_p2\": " + snowBombs + "}";
+                    }
+                    else if (player == playerManager.p2)
+                    {
+                        response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
+                  ", \"snow_bombs_hit_p1\": " + snowBombs + "}";
+                    }
+                    else
+                    {
+                        response = null;
+                        Debug.LogError("Player null");
+                    }
 
                     Debug.Log("Response: " + response);
 
@@ -250,10 +270,23 @@ namespace M2MqttUnity.Examples
                     Player p1State = gameData.game_state.p1;
                     Player p2State = gameData.game_state.p2;
 
+                    Player p1 = playerManager.p1;
+                    Player p2 = playerManager.p2;
+
                     // Update HUD with correct values
-                    HUDManager.UpdatePlayer(HUDManager.p1, p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p2State.deaths);
-                    HUDManager.UpdatePlayer(HUDManager.p2, p2State.hp, p2State.shields, p2State.shield_hp, p2State.bullets, p2State.bombs, p2State.deaths);
-                    projectileEventManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
+                    HUDManager.UpdatePlayer(p1, p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p2State.deaths);
+                    HUDManager.UpdatePlayer(p2, p2State.hp, p2State.shields, p2State.shield_hp, p2State.bullets, p2State.bombs, p2State.deaths);
+
+                    //Shows projectile for current player
+                    if (playerManager.GetCurrentPlayer() == p1)
+                    {
+                        projectileEventManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
+                    }
+                    else
+                    {
+                        projectileEventManager.UpdateAction(gameData.p2_action, p1State.shield_hp);
+                    }
+
                 }
                 catch (ArgumentException ex)
                 {
