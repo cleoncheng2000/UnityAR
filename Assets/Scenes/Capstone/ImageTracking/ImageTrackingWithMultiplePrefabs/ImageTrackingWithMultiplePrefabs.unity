@@ -6568,6 +6568,7 @@ MonoBehaviour:
   HUDManager: {fileID: 1809621591}
   playerManager: {fileID: 308236330}
   connectionStatusImage: {fileID: 1807979958}
+  sendButton: {fileID: 1161877321}
 --- !u!1 &1707820678
 GameObject:
   m_ObjectHideFlags: 0

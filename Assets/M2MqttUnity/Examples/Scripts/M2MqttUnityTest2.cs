@@ -63,6 +63,8 @@ namespace M2MqttUnity.Examples
 
         private List<string> eventMessages = new List<string>();
         private bool updateUI = false;
+        public Button sendButton;
+
         public void TestPublish()
         {
             client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes("Test message"), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
@@ -210,6 +212,17 @@ namespace M2MqttUnity.Examples
             SetUiMessage("Ready.");
             updateUI = true;
             base.Start();
+            sendButton.onClick.AddListener(SendJson);
+        }
+
+        public void SendJson()
+        {
+            string response = "{\"type\": \"visibility_and_snowbomb_update\"" +
+             ", \"players_visibility\": " + "true" +
+             ", \"snow_bombs_hit_p1\": " + 0 +
+             ", \"snow_bombs_hit_p2\": " + 0 + "}";
+            Debug.Log("Response: " + response);
+            client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
         }
 
         protected override void DecodeMessage(string topic, byte[] message)
@@ -221,42 +234,43 @@ namespace M2MqttUnity.Examples
             if (topic == "group21/query")
             {
                 // Check if the message contains the expected query
-                if (msg.Contains("\"query\": \"is_opponent_visible\""))
-                {
-                    bool isVisible = false;
-                    if (projectileEventManager.trackedTarget != null)
-                    {
-                        isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
-                    }
+                //if (msg.Contains("\"type\": \"player_visibility\""))
+                //{
+                //     bool isVisible = true;
+                //     if (projectileEventManager.trackedTarget != null)
+                //     {
+                //         isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                //     }
+                //     int snowBombs = projectileEventManager.GetSnowParticleCount();
+                //     string response;
+                //     Player player = playerManager.GetCurrentPlayer();
 
+                //     if (player == playerManager.p1)
+                //     {
+                //         response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
+                //                           ", \"snow_bombs_hit_p2\": " + snowBombs + "}";
+                //     }
+                //     else if (player == playerManager.p2)
+                //     {
+                //         response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
+                //   ", \"snow_bombs_hit_p1\": " + snowBombs + "}";
+                //     }
+                //     else
+                //     {
+                //         response = null;
+                //         Debug.LogError("Player null");
+                //     }
+                string response = "{\"type\": \"visibility_and_snowbomb_update\"" +
+             ", \"players_visibility\": " + "true" +
+             ", \"snow_bombs_hit_p1\": " + 0 +
+             ", \"snow_bombs_hit_p2\": " + 0 + "}";
+                Debug.Log("Response: " + response);
 
-                    int snowBombs = projectileEventManager.GetSnowParticleCount();
-                    string response;
-                    Player player = playerManager.GetCurrentPlayer();
-
-                    if (player == playerManager.p1)
-                    {
-                        response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
-                                          ", \"snow_bombs_hit_p2\": " + snowBombs + "}";
-                    }
-                    else if (player == playerManager.p2)
-                    {
-                        response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
-                  ", \"snow_bombs_hit_p1\": " + snowBombs + "}";
-                    }
-                    else
-                    {
-                        response = null;
-                        Debug.LogError("Player null");
-                    }
-
-                    Debug.Log("Response: " + response);
-
-                    // Publish response
-                    client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
-                    Debug.Log("Published response: " + response);
-                    AddUiMessage("Published response: " + response);
-                }
+                // Publish response
+                client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+                Debug.Log("Published response: " + response);
+                AddUiMessage("Published response: " + response);
+                //}
             }
             if (topic == "group21/game_state")
             { //parse game state stuff 
