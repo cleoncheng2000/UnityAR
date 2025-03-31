@@ -233,44 +233,38 @@ namespace M2MqttUnity.Examples
 
             if (topic == "group21/query")
             {
-                // Check if the message contains the expected query
-                //if (msg.Contains("\"type\": \"player_visibility\""))
-                //{
-                //     bool isVisible = true;
-                //     if (projectileEventManager.trackedTarget != null)
-                //     {
-                //         isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
-                //     }
-                //     int snowBombs = projectileEventManager.GetSnowParticleCount();
-                //     string response;
-                //     Player player = playerManager.GetCurrentPlayer();
+                bool isVisible = true;
+                if (projectileEventManager.trackedTarget != null)
+                {
+                    isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                }
+                else
+                {
+                    Debug.LogWarning("Tracked target is null. Setting isVisible to false.");
+                    isVisible = false;
+                }
 
-                //     if (player == playerManager.p1)
-                //     {
-                //         response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
-                //                           ", \"snow_bombs_hit_p2\": " + snowBombs + "}";
-                //     }
-                //     else if (player == playerManager.p2)
-                //     {
-                //         response = "{\"is_opponent_visible\": " + (isVisible ? "true" : "false") +
-                //   ", \"snow_bombs_hit_p1\": " + snowBombs + "}";
-                //     }
-                //     else
-                //     {
-                //         response = null;
-                //         Debug.LogError("Player null");
-                //     }
-                string response = "{\"type\": \"visibility_and_snowbomb_update\"" +
-             ", \"players_visibility\": " + "true" +
-             ", \"snow_bombs_hit_p1\": " + 0 +
-             ", \"snow_bombs_hit_p2\": " + 0 + "}";
+                int snowBombs = projectileEventManager.GetSnowParticleCount();
+                Player player = playerManager.GetCurrentPlayer();
+
+                // Create a JSON object
+                var responseObject = new
+                {
+                    type = "visibility_and_snowbomb_update",
+                    player_id = (player == playerManager.p1) ? 1 : 2,
+                    is_opponent_visible = isVisible,
+                    snow_bombs_hit = snowBombs,
+                };
+
+                // Serialize the object to a JSON string
+                string response = JsonConvert.SerializeObject(responseObject);
+
                 Debug.Log("Response: " + response);
 
-                // Publish response
+                // Publish the JSON response
                 client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
                 Debug.Log("Published response: " + response);
                 AddUiMessage("Published response: " + response);
-                //}
             }
             if (topic == "group21/game_state")
             { //parse game state stuff 
@@ -325,6 +319,7 @@ namespace M2MqttUnity.Examples
                 }
             }
         }
+
         private void StoreMessage(string eventMsg)
         {
             eventMessages.Add(eventMsg);
