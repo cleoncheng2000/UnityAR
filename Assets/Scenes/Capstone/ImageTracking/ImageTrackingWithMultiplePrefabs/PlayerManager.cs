@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,12 +10,16 @@ public class PlayerManager : MonoBehaviour
     public Button p1Button;
     public Button p2Button;
 
+    public TMP_Text p1Text;
+    public TMP_Text p2Text;
+
     private Player currentPlayer; // Currently selected player
 
     void Start()
     {
         // Default to Player 1
         currentPlayer = p1;
+        HighlightPlayer();
         if (p1Button != null)
         {
             p1Button.onClick.AddListener(SelectPlayer1);
@@ -29,6 +34,7 @@ public class PlayerManager : MonoBehaviour
     public void SelectPlayer1()
     {
         currentPlayer = p1;
+        HighlightPlayer();  
         Debug.Log("Player 1 selected.");
     }
 
@@ -36,6 +42,7 @@ public class PlayerManager : MonoBehaviour
     public void SelectPlayer2()
     {
         currentPlayer = p2;
+        HighlightPlayer();
         Debug.Log("Player 2 selected.");
     }
 
@@ -43,5 +50,15 @@ public class PlayerManager : MonoBehaviour
     public Player GetCurrentPlayer()
     {
         return currentPlayer;
+    }
+
+    public void HighlightPlayer() {
+        if (currentPlayer == p1) {
+            p1Text.color = Color.green;
+            p2Text.color = Color.white;
+        } else {
+            p1Text.color = Color.white;
+            p2Text.color = Color.green;
+        }
     }
 }

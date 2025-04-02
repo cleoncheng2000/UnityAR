@@ -252,7 +252,7 @@ namespace M2MqttUnity.Examples
                 {
                     type = "visibility_and_snowbomb_update",
                     player_id = (player == playerManager.p1) ? 1 : 2,
-                    is_opponent_visible = isVisible,
+                    opponent_visibility = isVisible,
                     snow_bombs_hit = snowBombs,
                 };
 
