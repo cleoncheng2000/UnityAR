@@ -9,6 +9,7 @@ using Unity.XR.CoreUtils;
 using System.Linq;
 using Unity.Multiplayer.Center.Common;
 
+
 public class ProjectileEventManager : MonoBehaviour
 {
     // Managers for AR subsystems
