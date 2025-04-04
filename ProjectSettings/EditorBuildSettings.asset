@@ -182,12 +182,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/BoundingBoxDetection/BoundingBoxes.unity
     guid: e5d8c18ab0c954fd4a7aee48dffe9836
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Capstone/ImageTracking/ImageTrackingWithMultiplePrefabs/ImageTrackingWithMultiplePrefabs.unity
     guid: adc64a54266e52b4292878a4d6d79db0
   - enabled: 0
     path: Assets/Samples/Google Cardboard XR Plugin for Unity/1.28.0/Hello Cardboard/Scenes/HelloCardboard.unity
     guid: 03c48c5e809944fa4afcae9973709f26
+  - enabled: 1
+    path: Assets/Scenes/Capstone/ImageTracking/Vuforia Capstone/Vuforia Capstone.unity
+    guid: 342a154fb0326964a9326ce58bece86f
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: c52d3bb36b4c86f47af54ab9c7a02589,
       type: 2}

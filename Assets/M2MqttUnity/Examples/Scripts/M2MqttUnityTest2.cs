@@ -56,7 +56,7 @@ namespace M2MqttUnity.Examples
         public Button disconnectButton;
         public Button testPublishButton;
         public Button clearButton;
-        public ProjectileEventManager projectileEventManager;
+        public ProjectileManager projectileManager;
         public HUDManager HUDManager;
         public PlayerManager playerManager;
         public Image connectionStatusImage;
@@ -212,7 +212,7 @@ namespace M2MqttUnity.Examples
             SetUiMessage("Ready.");
             updateUI = true;
             base.Start();
-            sendButton.onClick.AddListener(SendJson);
+            //sendButton.onClick.AddListener(SendJson);
         }
 
         public void SendJson()
@@ -234,9 +234,9 @@ namespace M2MqttUnity.Examples
             if (topic == "group21/query")
             {
                 bool isVisible = true;
-                if (projectileEventManager.trackedTarget != null)
+                if (projectileManager.observerBehaviour != null)
                 {
-                    isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                    isVisible = projectileManager.IsTargetInView(projectileManager.observerBehaviour.transform);
                 }
                 else
                 {
@@ -244,7 +244,7 @@ namespace M2MqttUnity.Examples
                     isVisible = false;
                 }
 
-                int snowBombs = projectileEventManager.GetSnowParticleCount();
+                int snowBombs = projectileManager.GetSnowParticleCount();
                 Player player = playerManager.GetCurrentPlayer();
 
                 // Create a JSON object
@@ -288,11 +288,11 @@ namespace M2MqttUnity.Examples
                     //Shows projectile for current player
                     if (playerManager.GetCurrentPlayer() == p1)
                     {
-                        projectileEventManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
+                        projectileManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
                     }
                     else
                     {
-                        projectileEventManager.UpdateAction(gameData.p2_action, p1State.shield_hp);
+                        projectileManager.UpdateAction(gameData.p2_action, p1State.shield_hp);
                     }
 
                 }

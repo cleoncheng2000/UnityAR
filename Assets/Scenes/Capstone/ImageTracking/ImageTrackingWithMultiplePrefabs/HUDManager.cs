@@ -105,10 +105,10 @@ public class HUDManager : MonoBehaviour
         {
             selfShieldButton.onClick.AddListener(SelfShield);
         }
-        if (VRButton != null)
-        {
-            VRButton.onClick.AddListener(EnterVR);
-        }
+        // if (VRButton != null)
+        // {
+        //     VRButton.onClick.AddListener(EnterVR);
+        // }
     }
 
     void Update()
