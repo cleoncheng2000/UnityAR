@@ -49,9 +49,10 @@ public class ProjectileManager : MonoBehaviour
     public Button fencingButton;
     public Button shieldButton;
     public Button selfShieldButton;
-
+        
     public TMP_Text snowParticleCountText; // Text to display the snow particle count
 
+    public AudioManagerVuforia audioManager; // Reference to the audio manager
     public ObserverBehaviour observerBehaviour; // Reference to the Vuforia observer behaviour
     public List<Vector3> SnowParticlePositions = new List<Vector3>(); // Store the positions of snow particles
     // Dictionary to map anchors to snow particle effects
@@ -85,7 +86,7 @@ public class ProjectileManager : MonoBehaviour
     public void FireBomb()
     {
         GameObject bomb = Instantiate(bombPrefab, bombSpawnPoint.position, MainCamera.rotation);
-
+        audioManager.PlayBombSound(); // Play the bomb sound
         if (currentStatus == true && IsTargetInView(observerBehaviour.transform))
         {
             bomb.GetComponent<ArcProjectile>().FireArcProjectile(observerBehaviour.transform, true, 5 * snowParticleCount);
@@ -106,7 +107,7 @@ public class ProjectileManager : MonoBehaviour
     public void FireBullet()
     {
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
-
+        audioManager.PlayGunSound(); // Play the gun sound
         if (observerBehaviour != null && IsTargetInView(observerBehaviour.transform))
         {
 
@@ -121,7 +122,7 @@ public class ProjectileManager : MonoBehaviour
     public void FireBadminton()
     {
         GameObject shuttle = Instantiate(badmintonPrefab, badmintonSpawnPoint.position, MainCamera.rotation);
-
+        audioManager.PlayBadmintonSound(); // Play the badminton sound
         if (observerBehaviour != null && IsTargetInView(observerBehaviour.transform))
         {
             shuttle.GetComponent<ArcProjectile>().FireArcProjectile(observerBehaviour.transform, true, 5 * snowParticleCount);
@@ -135,7 +136,7 @@ public class ProjectileManager : MonoBehaviour
     public void FireBoxing()
     {
         GameObject glove = Instantiate(boxingPrefab, boxingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
-
+        audioManager.PlayBoxingSound(); // Play the boxing sound
         if (observerBehaviour != null && IsTargetInView(observerBehaviour.transform))
         {
             glove.GetComponent<StraightProjectiles>().FireStraightProjectile(observerBehaviour.transform, true, 5 * snowParticleCount);
@@ -149,7 +150,7 @@ public class ProjectileManager : MonoBehaviour
     public void FireGolf()
     {
         GameObject missile = Instantiate(golfPrefab, golfSpawnPoint.position, MainCamera.rotation);
-
+        audioManager.PlayGolfSound(); // Play the golf sound
         if (observerBehaviour != null && IsTargetInView(observerBehaviour.transform))
         {
             missile.GetComponent<ArcProjectile>().FireArcProjectile(observerBehaviour.transform, true, 5 * snowParticleCount);
@@ -163,7 +164,7 @@ public class ProjectileManager : MonoBehaviour
     public void FireFencing()
     {
         GameObject bullet = Instantiate(fencingPrefab, fencingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
-
+        audioManager.PlayFencingSound(); // Play the fencing sound
         if (observerBehaviour != null && IsTargetInView(observerBehaviour.transform))
         {
             bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(observerBehaviour.transform, true, 5 * snowParticleCount);
@@ -204,6 +205,7 @@ public class ProjectileManager : MonoBehaviour
     public void Reload()
     {
         GunRecoil gunController = MainCamera.GetComponentInChildren<GunRecoil>();
+        audioManager.PlayReloadSound(); // Play the reload sound
         gunController.Reload();
         if (snowParticleCount > 0)
         {

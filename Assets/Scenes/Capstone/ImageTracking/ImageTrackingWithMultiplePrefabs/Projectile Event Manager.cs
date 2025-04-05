@@ -54,6 +54,8 @@ public class ProjectileEventManager : MonoBehaviour
     public Button shieldButton;
     public Button selfShieldButton;
 
+    public AudioManagerVuforia audioManagerVuforia;
+
     // Dictionary to map anchors to snow particle effects
     private Dictionary<ARAnchor, GameObject> anchorToSnowParticleMap = new Dictionary<ARAnchor, GameObject>();
     private int snowParticleCount = 0;
@@ -157,7 +159,7 @@ public class ProjectileEventManager : MonoBehaviour
     public void FireBomb()
     {
         GameObject bomb = Instantiate(bombPrefab, bombSpawnPoint.position, MainCamera.rotation);
-
+        audioManagerVuforia.PlayBombSound(); // Play the bomb sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             bomb.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
@@ -179,7 +181,7 @@ public class ProjectileEventManager : MonoBehaviour
     public void FireBullet()
     {
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
-
+        audioManagerVuforia.PlayGunSound(); // Play the gun sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
 
@@ -194,7 +196,7 @@ public class ProjectileEventManager : MonoBehaviour
     public void FireBadminton()
     {
         GameObject shuttle = Instantiate(badmintonPrefab, badmintonSpawnPoint.position, MainCamera.rotation);
-
+        audioManagerVuforia.PlayBadmintonSound(); // Play the badminton sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             shuttle.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
@@ -208,7 +210,7 @@ public class ProjectileEventManager : MonoBehaviour
     public void FireBoxing()
     {
         GameObject glove = Instantiate(boxingPrefab, boxingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
-
+        audioManagerVuforia.PlayBoxingSound(); // Play the boxing sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             glove.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);

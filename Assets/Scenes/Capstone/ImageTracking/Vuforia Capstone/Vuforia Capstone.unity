@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchButton: {fileID: 316658989}
+  UICanvas: {fileID: 1624343956}
 --- !u!4 &63188437
 Transform:
   m_ObjectHideFlags: 0
@@ -1087,7 +1088,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 348564452}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 725082287}
+        m_TargetAssemblyTypeName: AudioManagerVuforia, Assembly-CSharp
+        m_MethodName: PlayShieldSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &348564452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1208,7 +1221,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 349019518}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 561296635}
+        m_TargetAssemblyTypeName: ProjectileManager, Assembly-CSharp
+        m_MethodName: Reload
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &349019518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1414,7 +1439,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 440894765}
-  - component: {fileID: 440894764}
+  - component: {fileID: 440894766}
   m_Layer: 0
   m_Name: Input Manager
   m_TagString: Untagged
@@ -1422,41 +1447,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &440894764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 440894763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b966fed9415b09545a299d5b27154080, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brokerAddress: 0cc00bbd72c94b7589723d139d527c9c.s1.eu.hivemq.cloud
-  brokerPort: 8883
-  isEncrypted: 1
-  certificateName: 
-  connectionDelay: 500
-  timeoutOnConnection: 30000
-  autoConnect: 1
-  mqttUserName: hivemq.webclient.1741332185289
-  mqttPassword: 3#.2!*01IJQZbafAcdgC
-  autoTest: 0
-  consoleInputField: {fileID: 0}
-  encryptedToggle: {fileID: 0}
-  addressInputField: {fileID: 0}
-  portInputField: {fileID: 0}
-  connectButton: {fileID: 0}
-  disconnectButton: {fileID: 0}
-  testPublishButton: {fileID: 0}
-  clearButton: {fileID: 0}
-  projectileManager: {fileID: 561296635}
-  HUDManager: {fileID: 1624343953}
-  playerManager: {fileID: 755151427}
-  connectionStatusImage: {fileID: 1621604496}
-  sendButton: {fileID: 0}
 --- !u!4 &440894765
 Transform:
   m_ObjectHideFlags: 0
@@ -1472,6 +1462,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &440894766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440894763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01571c108651a6148ae9e24c25c86400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brokerAddress: localhost
+  brokerPort: 1883
+  isEncrypted: 0
+  certificateName: 
+  connectionDelay: 500
+  timeoutOnConnection: 30000
+  autoConnect: 0
+  mqttUserName: hivemq.webclient.1741332185289
+  mqttPassword: 3#.2!*01IJQZbafAcdgC
+  autoTest: 0
+  consoleInputField: {fileID: 0}
+  encryptedToggle: {fileID: 0}
+  addressInputField: {fileID: 0}
+  portInputField: {fileID: 0}
+  connectButton: {fileID: 0}
+  disconnectButton: {fileID: 0}
+  testPublishButton: {fileID: 0}
+  clearButton: {fileID: 0}
+  projectileManager: {fileID: 561296635}
+  HUDManager: {fileID: 1624343953}
+  playerManager: {fileID: 755151427}
+  connectionStatusImage: {fileID: 1621604496}
+  audioManagerVuforia: {fileID: 0}
+  sendButton: {fileID: 0}
 --- !u!1 &492695932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1685,6 +1711,7 @@ MonoBehaviour:
   shieldButton: {fileID: 1663992058}
   selfShieldButton: {fileID: 348564451}
   snowParticleCountText: {fileID: 2097040111}
+  audioManager: {fileID: 725082287}
   observerBehaviour: {fileID: 1882799651}
   SnowParticlePositions: []
 --- !u!4 &561296636
@@ -2490,6 +2517,58 @@ RectTransform:
   m_AnchoredPosition: {x: 112, y: 112}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &725082286
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 725082288}
+  - component: {fileID: 725082287}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &725082287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725082286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ced62caa49d2164d859d95de20c320c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxingSound: {fileID: 8300000, guid: b7a99a57395ac0342b6be635bcb766e0, type: 3}
+  gunSound: {fileID: 8300000, guid: 11406b481ad992d45a4edfc7d4cd7872, type: 3}
+  reloadSound: {fileID: 8300000, guid: 20e02e1f8925fe9479d95e033fb55ae9, type: 3}
+  fencingSound: {fileID: 8300000, guid: 579cb36f40ac7554c83f479898472118, type: 3}
+  shieldSound: {fileID: 8300000, guid: f2a0c097b9863b940ab71cbee4ce2590, type: 3}
+  badmintonSound: {fileID: 8300000, guid: 5142e1a2752229743ab469f37fd79b22, type: 3}
+  golfSound: {fileID: 8300000, guid: 752065f3a423c3745a00b7437c78fa09, type: 3}
+  bombSound: {fileID: 8300000, guid: c79bcd87b6d661745b974d136fc2ba35, type: 3}
+--- !u!4 &725082288
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725082286}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -32.17914, y: -5.8052397, z: 99.60438}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &725785120
 GameObject:
   m_ObjectHideFlags: 0
@@ -7289,7 +7368,7 @@ Canvas:
   m_GameObject: {fileID: 1624343952}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 1387048842}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
@@ -9030,3 +9109,4 @@ SceneRoots:
   - {fileID: 755151428}
   - {fileID: 630139797}
   - {fileID: 63188437}
+  - {fileID: 725082288}

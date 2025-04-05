@@ -379,6 +379,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115381136}
   m_CullTransparentMesh: 1
+--- !u!1 &126183958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 126183960}
+  - component: {fileID: 126183959}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &126183959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126183958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ced62caa49d2164d859d95de20c320c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxingSound: {fileID: 8300000, guid: b7a99a57395ac0342b6be635bcb766e0, type: 3}
+  gunSound: {fileID: 8300000, guid: 11406b481ad992d45a4edfc7d4cd7872, type: 3}
+  reloadSound: {fileID: 8300000, guid: 20e02e1f8925fe9479d95e033fb55ae9, type: 3}
+  fencingSound: {fileID: 8300000, guid: 579cb36f40ac7554c83f479898472118, type: 3}
+  shieldSound: {fileID: 8300000, guid: f2a0c097b9863b940ab71cbee4ce2590, type: 3}
+  badmintonSound: {fileID: 8300000, guid: 5142e1a2752229743ab469f37fd79b22, type: 3}
+  golfSound: {fileID: 8300000, guid: 752065f3a423c3745a00b7437c78fa09, type: 3}
+  bombSound: {fileID: 8300000, guid: c79bcd87b6d661745b974d136fc2ba35, type: 3}
+--- !u!4 &126183960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126183958}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -32.17914, y: -5.8052397, z: 99.60438}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &144346530
 GameObject:
   m_ObjectHideFlags: 0
@@ -4058,6 +4110,7 @@ MonoBehaviour:
   fencingButton: {fileID: 2087134256}
   shieldButton: {fileID: 1575724749}
   selfShieldButton: {fileID: 1622508524}
+  audioManagerVuforia: {fileID: 0}
 --- !u!1 &1110004533
 GameObject:
   m_ObjectHideFlags: 0
@@ -9305,3 +9358,4 @@ SceneRoots:
   - {fileID: 3498395106905117467}
   - {fileID: 1683188206}
   - {fileID: 615894111}
+  - {fileID: 126183960}

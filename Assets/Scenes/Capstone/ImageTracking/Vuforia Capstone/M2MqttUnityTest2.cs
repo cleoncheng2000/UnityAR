@@ -43,7 +43,7 @@ namespace M2MqttUnity.Examples
     /// </summary>
     /// 
 
-    public class M2MqttUnityCapstone : M2MqttUnityClient
+    public class M2MqttUnityTest : M2MqttUnityClient
     {
         [Tooltip("Set this to true to perform a testing cycle automatically on startup")]
         public bool autoTest = false;
@@ -56,7 +56,7 @@ namespace M2MqttUnity.Examples
         public Button disconnectButton;
         public Button testPublishButton;
         public Button clearButton;
-        public ProjectileEventManager projectileEventManager;
+        public ProjectileManager projectileManager;
         public HUDManager HUDManager;
         public PlayerManager playerManager;
         public Image connectionStatusImage;
@@ -234,9 +234,9 @@ namespace M2MqttUnity.Examples
             if (topic == "group21/query")
             {
                 bool isVisible = true;
-                if (projectileEventManager.trackedTarget != null)
+                if (projectileManager.observerBehaviour != null)
                 {
-                    isVisible = projectileEventManager.IsTargetInView(projectileEventManager.trackedTarget.transform);
+                    isVisible = projectileManager.IsTargetInView(projectileManager.observerBehaviour.transform);
                 }
                 else
                 {
@@ -244,7 +244,7 @@ namespace M2MqttUnity.Examples
                     isVisible = false;
                 }
 
-                int snowBombs = projectileEventManager.GetSnowParticleCount();
+                int snowBombs = projectileManager.GetSnowParticleCount();
                 Player player = playerManager.GetCurrentPlayer();
 
                 // Create a JSON object
@@ -288,14 +288,14 @@ namespace M2MqttUnity.Examples
                     //Shows projectile for current player
                     if (playerManager.GetCurrentPlayer() == p1)
                     {
-                        projectileEventManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
+                        projectileManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
                         if (gameData.p1_action == "shield") {
                             audioManagerVuforia.PlayShieldSound();
                         }
                     }
                     else
                     {
-                        projectileEventManager.UpdateAction(gameData.p2_action, p1State.shield_hp);
+                        projectileManager.UpdateAction(gameData.p2_action, p1State.shield_hp);
                         if (gameData.p2_action == "shield") {
                             audioManagerVuforia.PlayShieldSound();
                         }
