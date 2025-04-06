@@ -49,7 +49,7 @@ public class ProjectileManager : MonoBehaviour
     public Button fencingButton;
     public Button shieldButton;
     public Button selfShieldButton;
-        
+
     public TMP_Text snowParticleCountText; // Text to display the snow particle count
 
     public AudioManagerVuforia audioManager; // Reference to the audio manager
@@ -107,6 +107,8 @@ public class ProjectileManager : MonoBehaviour
     public void FireBullet()
     {
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
+        GunRecoil gunController = MainCamera.GetComponentInChildren<GunRecoil>();
+        gunController.Shoot();
         audioManager.PlayGunSound(); // Play the gun sound
         if (observerBehaviour != null && IsTargetInView(observerBehaviour.transform))
         {
@@ -205,8 +207,9 @@ public class ProjectileManager : MonoBehaviour
     public void Reload()
     {
         GunRecoil gunController = MainCamera.GetComponentInChildren<GunRecoil>();
-        audioManager.PlayReloadSound(); // Play the reload sound
         gunController.Reload();
+        audioManager.PlayReloadSound(); // Play the reload sound
+
         if (snowParticleCount > 0)
         {
             SpawnsDamagePopups.Instance.DamageDone(5 * snowParticleCount, observerBehaviour.transform.position, false);

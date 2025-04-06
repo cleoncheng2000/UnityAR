@@ -9,8 +9,8 @@ public class GunRecoil : MonoBehaviour
 
     public float recoilDuration = 0.5f;
     public float reloadDuration = 2f;
-    public Button shootButton;
-    public Button reloadButton;
+    // public Button shootButton;
+    // public Button reloadButton;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
@@ -21,8 +21,8 @@ public class GunRecoil : MonoBehaviour
 
         originalPosition = transform.localPosition;
         originalRotation = transform.localRotation;
-        shootButton.onClick.AddListener(Shoot);
-        reloadButton.onClick.AddListener(Reload);
+        // shootButton.onClick.AddListener(Shoot);
+        // reloadButton.onClick.AddListener(Reload);
     }
 
     public void Shoot()
