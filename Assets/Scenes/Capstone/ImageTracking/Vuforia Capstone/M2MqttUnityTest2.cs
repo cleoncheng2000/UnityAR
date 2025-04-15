@@ -64,6 +64,9 @@ namespace M2MqttUnity.Examples
         private List<string> eventMessages = new List<string>();
         private bool updateUI = false;
         public Button sendButton;
+        private bool previousVisibilityStatus = false; // Track the last known visibility status
+        private int previousSnowBombStatus;
+        private Coroutine visibilityAndSnowBombMonitorCoroutine;
 
         public void TestPublish()
         {
@@ -212,7 +215,41 @@ namespace M2MqttUnity.Examples
             SetUiMessage("Ready.");
             updateUI = true;
             base.Start();
+            projectileManager.OnVisibilityAndSnowBombsStatusChanged += (isVisible, snowBombs) =>
+            {
+                // if (isVisible != previousVisibilityStatus || snowBombs != previousSnowBombStatus)
+                // {
+                previousVisibilityStatus = isVisible;
+                previousSnowBombStatus = snowBombs;
+                PublishVisibilityStatus(isVisible, snowBombs);
+                // }
+            };
             //sendButton.onClick.AddListener(SendJson);
+        }
+
+
+        private void PublishVisibilityStatus(bool isVisible, int snowBombs)
+        {
+            Player player = playerManager.GetCurrentPlayer();
+            var responseObject = new
+            {
+                type = "visibility_and_snowbomb_update",
+                player_id = (player == playerManager.p1) ? 1 : 2,
+                opponent_visibility = isVisible,
+                snow_bombs_hit = snowBombs,
+            };
+
+            String response = JsonConvert.SerializeObject(responseObject);
+
+            Debug.Log("Response: " + response);
+            if (client != null && client.IsConnected)
+            {
+                client.Publish("group21/response", System.Text.Encoding.UTF8.GetBytes(response), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+            }
+            else
+            {
+                Debug.LogWarning("MQTT client is not connected. Unable to publish visibility status.");
+            }
         }
 
         public void SendJson()
@@ -234,9 +271,9 @@ namespace M2MqttUnity.Examples
             if (topic == "group21/query")
             {
                 bool isVisible = true;
-                if (projectileManager.observerBehaviour != null)
+                if (projectileManager.targetBehaviour != null)
                 {
-                    isVisible = projectileManager.IsTargetInView(projectileManager.observerBehaviour.transform);
+                    isVisible = projectileManager.IsTargetInView(projectileManager.targetBehaviour.transform);
                 }
                 else
                 {
@@ -280,26 +317,50 @@ namespace M2MqttUnity.Examples
 
                     Player p1 = playerManager.p1;
                     Player p2 = playerManager.p2;
-
-                    // Update HUD with correct values
-                    HUDManager.UpdatePlayer(p1, p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p2State.deaths);
-                    HUDManager.UpdatePlayer(p2, p2State.hp, p2State.shields, p2State.shield_hp, p2State.bullets, p2State.bombs, p2State.deaths);
+                    if (playerManager.GetCurrentPlayer() == p1)
+                    {
+                        playerManager.prevBombs = p1State.bombs;
+                        playerManager.prevBullet = p1State.bullets;
+                    }
+                    else
+                    {
+                        playerManager.prevBombs = p2State.bombs;
+                        playerManager.prevBullet = p2State.bullets;
+                    }
+                    // playerManager.setPlayer1(p1State.hp, p1State.bombs, p1State.bullets, p1State.shields, p1State.shield_hp, p1State.deaths);
+                    // playerManager.setPlayer2(p2State.hp, p2State.bombs, p2State.bullets, p2State.shields, p2State.shield_hp, p2State.deaths);
 
                     //Shows projectile for current player
                     if (playerManager.GetCurrentPlayer() == p1)
                     {
                         projectileManager.UpdateAction(gameData.p1_action, p2State.shield_hp);
-                        if (gameData.p1_action == "shield") {
+                        if (gameData.p1_action == "shield")
+                        {
                             audioManagerVuforia.PlayShieldSound();
+                            if (projectileManager.getSnowBombs() > 0)
+                            {
+                                HUDManager.ShowDamage();
+                            }
                         }
                     }
                     else
                     {
                         projectileManager.UpdateAction(gameData.p2_action, p1State.shield_hp);
-                        if (gameData.p2_action == "shield") {
+                        if (gameData.p2_action == "shield")
+                        {
                             audioManagerVuforia.PlayShieldSound();
+                            if (projectileManager.getSnowBombs() > 0)
+                            {
+                                HUDManager.ShowDamage();
+                            }
                         }
                     }
+
+                    // Update HUD with correct values
+                    HUDManager.UpdatePlayer(p1, p1State.hp, p1State.shields, p1State.shield_hp, p1State.bullets, p1State.bombs, p1State.deaths, p2State.deaths);
+                    HUDManager.UpdatePlayer(p2, p2State.hp, p2State.shields, p2State.shield_hp, p2State.bullets, p2State.bombs, p1State.deaths, p2State.deaths);
+
+
 
                 }
                 catch (ArgumentException ex)

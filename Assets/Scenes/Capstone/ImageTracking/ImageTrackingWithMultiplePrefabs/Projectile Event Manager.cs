@@ -15,6 +15,7 @@ public class ProjectileEventManager : MonoBehaviour
     // Managers for AR subsystems
     public ARTrackedImageManager imageManager;
     public ARAnchorManager anchorManager;
+    public HUDManager hudManager;
 
     // Prefabs for different projectiles
     public GameObject targetPrefab;
@@ -164,7 +165,7 @@ public class ProjectileEventManager : MonoBehaviour
         {
             bomb.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
             CreateSnowParticleEffect(trackedTarget.transform.position);
-
+            hudManager.ShowDamage();
         }
         else
         {
@@ -173,8 +174,9 @@ public class ProjectileEventManager : MonoBehaviour
             GameObject tempTarget = new GameObject("TempTarget");
             tempTarget.transform.position = forwardPosition;
             bomb.GetComponent<ArcProjectile>().FireArcProjectile(tempTarget.transform, false, 0);
-            CreateSnowParticleEffect(tempTarget.transform.position);
+            //CreateSnowParticleEffect(tempTarget.transform.position);
             Destroy(tempTarget, 3f); // Clean up the temporary target after 3 seconds
+            hudManager.ShowMiss();
         }
     }
 
@@ -184,12 +186,13 @@ public class ProjectileEventManager : MonoBehaviour
         audioManagerVuforia.PlayGunSound(); // Play the gun sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
-
             bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
+            hudManager.ShowDamage();
         }
         else
         {
             FireAtTemporaryTarget(bullet, bulletSpawnPoint, false);
+            hudManager.ShowMiss();
         }
     }
 
@@ -200,10 +203,12 @@ public class ProjectileEventManager : MonoBehaviour
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             shuttle.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
+            hudManager.ShowDamage();
         }
         else
         {
             FireAtTemporaryTarget(shuttle, badmintonSpawnPoint, true);
+            hudManager.ShowMiss();
         }
     }
 
@@ -214,38 +219,44 @@ public class ProjectileEventManager : MonoBehaviour
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             glove.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
+            hudManager.ShowDamage();
         }
         else
         {
             FireAtTemporaryTarget(glove, boxingSpawnPoint, false);
+            hudManager.ShowMiss();
         }
     }
 
     public void FireGolf()
     {
         GameObject missile = Instantiate(golfPrefab, golfSpawnPoint.position, MainCamera.rotation);
-
+        audioManagerVuforia.PlayGolfSound(); // Play the golf sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             missile.GetComponent<ArcProjectile>().FireArcProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
+            hudManager.ShowDamage();
         }
         else
         {
             FireAtTemporaryTarget(missile, golfSpawnPoint, true);
+            hudManager.ShowMiss();
         }
     }
 
     public void FireFencing()
     {
         GameObject bullet = Instantiate(fencingPrefab, fencingSpawnPoint.position, Quaternion.LookRotation(MainCamera.forward, Vector3.up));
-
+        audioManagerVuforia.PlayFencingSound(); // Play the fencing sound
         if (trackedTarget != null && IsTargetInView(trackedTarget.transform))
         {
             bullet.GetComponent<StraightProjectiles>().FireStraightProjectile(trackedTarget.transform, true, 5 * snowParticleCount);
+            hudManager.ShowDamage();
         }
         else
         {
             FireAtTemporaryTarget(bullet, fencingSpawnPoint, false);
+            hudManager.ShowMiss();
         }
     }
 
@@ -278,6 +289,7 @@ public class ProjectileEventManager : MonoBehaviour
 
     public void Reload()
     {
+        audioManagerVuforia.PlayReloadSound(); // Play the reload sound
         GunRecoil gunController = MainCamera.GetComponentInChildren<GunRecoil>();
         gunController.Reload();
         if (snowParticleCount > 0)

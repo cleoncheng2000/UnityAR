@@ -28,7 +28,7 @@ public class StraightProjectiles : MonoBehaviour
             if (Vector3.Distance(transform.position, target.position) < 0.1f)
             {
                 Destroy(gameObject);  // Destroy the projectile
-                Damage(damage + extraDamage, isHit);
+                // Damage(damage + extraDamage, isHit);
             }
         }
     }
@@ -38,19 +38,19 @@ public class StraightProjectiles : MonoBehaviour
         if (collision.transform == target)
         {
             Destroy(gameObject);  // Destroy the projectile on collision with the target
-            Damage(5, isHit);
+            //Damage(5, isHit);
         }
     }
 
-    void Damage(int damage, bool isHit)
-    {
-        if (isHit)
-        {
-            SpawnsDamagePopups.Instance.DamageDone(damage, target.transform.position, false);
-        }
-        else
-        {
-            SpawnsDamagePopups.Instance.DamageDone(0, target.transform.position, false);
-        }
-    }
+    // void Damage(int damage, bool isHit)
+    // {
+    //     if (isHit)
+    //     {
+    //         SpawnsDamagePopups.Instance.DamageDone(damage, target.transform.position, false);
+    //     }
+    //     else
+    //     {
+    //         SpawnsDamagePopups.Instance.DamageDone(0, target.transform.position, false);
+    //     }
+    // }
 }

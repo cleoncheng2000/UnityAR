@@ -20,9 +20,9 @@ public class CardboardManager : MonoBehaviour
 
     public void LaunchGoogleCardboard()
     {
-        UICanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        UICanvas.worldCamera = Camera.main;
-        UICanvas.planeDistance = 1.0f;
+        // UICanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        // UICanvas.worldCamera = Camera.main;
+        // UICanvas.planeDistance = 1.0f;
         if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
             // Initialize and start the XR loader using Unity's XR Management system

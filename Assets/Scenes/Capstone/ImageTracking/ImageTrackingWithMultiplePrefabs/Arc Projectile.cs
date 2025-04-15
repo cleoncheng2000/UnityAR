@@ -51,7 +51,7 @@ public class ArcProjectile : MonoBehaviour
             if (horizontalMovement >= distance)
             {
                 Destroy(gameObject);  // Destroy the missile when it reaches the target position
-                Damage(damage + extraDamage, isHit);
+                // Damage(damage + extraDamage, isHit);
             }
         }
     }
@@ -61,16 +61,16 @@ public class ArcProjectile : MonoBehaviour
         if (collision.transform == target)
         {
             Destroy(gameObject);  // Destroy the missile if it hits the target
-            Damage(damage, isHit);
+            // Damage(damage, isHit);
         }
     }
 
-    void Damage(int damage, bool isHit) {
-        if (isHit) {
-            SpawnsDamagePopups.Instance.DamageDone(damage, target.transform.position, false);
-        }
-        else {
-            SpawnsDamagePopups.Instance.DamageDone(0, target.transform.position, false);
-        }
-    }
+    // void Damage(int damage, bool isHit) {
+    //     if (isHit) {
+    //         SpawnsDamagePopups.Instance.DamageDone(damage, target.transform.position, false);
+    //     }
+    //     else {
+    //         SpawnsDamagePopups.Instance.DamageDone(0, target.transform.position, false);
+    //     }
+    // }
 }

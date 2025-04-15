@@ -1,3 +1,4 @@
+using System.Drawing.Printing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,9 @@ public class PlayerManager : MonoBehaviour
 {
     public Player p1 = new Player(); // Player 1
     public Player p2 = new Player(); // Player 2
+    public int prevBombs = 2;
+    public int prevBullet = 6;
+
 
     public Button p1Button;
     public Button p2Button;
@@ -50,6 +54,26 @@ public class PlayerManager : MonoBehaviour
     public Player GetCurrentPlayer()
     {
         return currentPlayer;
+    }
+
+    public void setPlayer1(int hp, int bombs, int bullets, int shields, int shield_hp, int deaths) // Set the current player and their bombs
+    {
+        p1.hp = hp;
+        p1.bombs = bombs;
+        p1.bullets = bullets;
+        p1.shields = shields;
+        p1.shield_hp = shield_hp;
+        p1.deaths = deaths;
+    }
+
+    public void setPlayer2(int hp, int bombs, int bullets, int shields, int shield_hp, int deaths) // Set the current player and their bombs
+    {
+        p2.hp = hp;
+        p2.bombs = bombs;
+        p2.bullets = bullets;
+        p2.shields = shields;
+        p2.shield_hp = shield_hp;
+        p2.deaths = deaths;
     }
 
     public void HighlightPlayer() {

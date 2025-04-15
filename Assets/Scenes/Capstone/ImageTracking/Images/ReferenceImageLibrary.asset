@@ -28,4 +28,4 @@ MonoBehaviour:
     m_Size: {x: 0.3, y: 0.3}
     m_SpecifySize: 1
     m_Name: 7x7_1000-0
-    m_Texture: {fileID: 0}
+    m_Texture: {fileID: 2800000, guid: c94006cb97488d644aaa80d25e9949af, type: 3}

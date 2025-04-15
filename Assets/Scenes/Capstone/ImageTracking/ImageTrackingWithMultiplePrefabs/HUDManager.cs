@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -20,7 +21,8 @@ public class HUDManager : MonoBehaviour
 
     //Border Images
     public Q_Vignette_Single shieldImage;
-    public Q_Vignette_Single damageImage;
+    public Image damageImage;
+    public Image missImage;
     public Image P1HealthBarFront;
     public Image P1HealthBarBack;
     public Image P1ShieldBarFront;
@@ -47,6 +49,7 @@ public class HUDManager : MonoBehaviour
     public int maxShieldHealth = 30;
     public int maxAmmo = 6;
     public int maxBomb = 2;
+    public string score;
 
     //Player stats
     public PlayerManager playerManager;
@@ -71,6 +74,12 @@ public class HUDManager : MonoBehaviour
         shieldImage.mainScale = 0;
         p1 = playerManager.p1;
         p2 = playerManager.p2;
+        p1.hp = p2.hp = maxHealth;
+        p1.shields = p2.shields = maxShield;
+        p1.shield_hp = p2.shield_hp = 0;
+        p1.bullets = p2.bullets = maxAmmo;
+        p1.bombs = p2.bombs = maxBomb;
+        scoreText.text = "0 : 0";
         lerpTimer = 0f;
         UpdateHUD();
         if (damageSmallButton != null)
@@ -169,6 +178,7 @@ public class HUDManager : MonoBehaviour
 
     private void ChangeTeam()
     {
+        // CS1010: teamText.text = teamText.text == "A" ? "B" : "A"; 
         if (teamText.text == "B")
         {
             teamText.text = "A";
@@ -203,14 +213,14 @@ public class HUDManager : MonoBehaviour
         UpdateHUD();
     }
 
-    public void UpdatePlayer(Player player, int hp, int shields, int shield_hp, int bullets, int bombs, int deaths)
+    public void UpdatePlayer(Player player, int hp, int shields, int shield_hp, int bullets, int bombs, int p1deaths, int p2deaths)
     {
         player.hp = hp;
         player.shields = shields;
         player.shield_hp = shield_hp;
         player.bullets = bullets;
         player.bombs = bombs;
-        player.deaths = deaths;
+        scoreText.text = p2deaths.ToString() + " : " + p1deaths.ToString();
         UpdateHUD();
         UpdateShield();
     }
@@ -223,7 +233,6 @@ public class HUDManager : MonoBehaviour
         ammoText.text = playerManager.GetCurrentPlayer().bullets.ToString();
         bombText.text = playerManager.GetCurrentPlayer().bombs.ToString();
         shieldHealthText.text = playerManager.GetCurrentPlayer().shield_hp.ToString();
-        scoreText.text = p2.deaths.ToString() + " : " + p1.deaths.ToString();
     }
 
     public void UpdateShield()
@@ -290,5 +299,43 @@ public class HUDManager : MonoBehaviour
             isVR = false;
         }
 
+    }
+
+    public void ShowDamage()
+    {
+        StartCoroutine(FadeImage(damageImage));
+    }
+
+    public void ShowMiss()
+    {
+        StartCoroutine(FadeImage(missImage));
+    }
+
+    private IEnumerator FadeImage(Image image)
+    {
+        // Ensure the image is fully visible at the start
+        if (image == missImage) {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 0.03f);
+            Debug.Log("Miss image color: " + image.color);
+        }
+        else {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 1f);
+        }
+        
+
+        // Gradually fade out the image over 1 second
+        float fadeDuration = 1f; // Duration of the fade-out effect
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            image.color = new Color(image.color.r, image.color.g, image.color.b, alpha);
+            yield return null;
+        }
+
+        // Ensure the image is fully transparent at the end
+        image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
     }
 }
